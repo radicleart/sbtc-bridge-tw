@@ -1,19 +1,29 @@
 <script lang="ts">
+import { sbtcConfig } from '$stores/stores'
+import { CONFIG } from '$lib/config';
 </script>
   
 <div class="container">
     <div class="frame14">
         <div class="frame24">
+            {#if !$sbtcConfig?.sbtcContractData?.sbtcWalletAddress}
+            <h1 class="title">Error: sBTC Wallet</h1>
+            {:else}
             <h1 class="title">Server Error!</h1>
+            {/if}
         </div>
         <div class="frame26">
                 <div class="hint">
-                <p class="text-hint">
-                    Mainnet is not yet fully supported.
-                </p>
-                <p class="text-hint">
-                    Please use the settings menu to switch to testnet.
-                </p>
+                {#if !$sbtcConfig?.sbtcContractData?.sbtcWalletAddress}
+                <p class="text-hint">The sBTC wallet is undefined in the sBTC Contract.</p>
+                <p class="text-hint">The Bridge is waiting for configuration data to be setup.</p>
+                {:else if CONFIG.VITE_NETWORK === 'mainnet'}
+                <p class="text-hint">Mainnet is not yet fully supported.</p>
+                <p class="text-hint">Please use the settings menu to switch to testnet.</p>
+                {:else}
+                <p class="text-hint">Temporarily problems connecting to the bridge.</p>
+                <p class="text-hint">Please try later.</p>
+                {/if}
                 <p class="text-hint-light">For more info about the sBTC Brigde, check <a class="text-hint-link" href="/faq">the FAQ page.</a></p>
             </div>
         </div>

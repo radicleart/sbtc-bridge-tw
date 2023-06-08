@@ -15,15 +15,21 @@
 	import type { SbtcConfig } from '$types/sbtc_config'
 	import { defaultSbtcConfig } from '$lib/sbtc';
 	import { COMMS_ERROR } from '$lib/utils.js'
-	import { loginStacksJs } from '$lib/stacks_connect'
+	import { loginStacksJs, loggedIn } from '$lib/stacks_connect'
 
+	let componentKey = 0;
 	console.log('process.env: ', import.meta.env);
 	setConfig($page.url.search);
 	const search = $page.url.search;
+	if (!isLegal(location.href)) {
+		componentKey++;
+		goto('/' + '?net=testnet')
+	}
 	beforeNavigate((nav) => {
 		if (!isLegal(nav.to?.route.id || '')) {
 			nav.cancel();
 			loginStacksJs(initApplication);
+			componentKey++;
 			return;
 		}
 		const next = (nav.to?.url.pathname || '') + (nav.to?.url.search || '');
@@ -80,7 +86,9 @@
 {#if inited}
 <div class="page background text-white">
 	<div class="header " style="z-index: 7;">
+		{#key componentKey}
 		<Header on:init_application={initApplication}></Header>
+		{/key}
 	</div>
 	<div class="wrapper">
 		<slot></slot>

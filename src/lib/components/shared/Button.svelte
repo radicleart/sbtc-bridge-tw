@@ -41,7 +41,7 @@ const doClicked = (event:any) => {
   align-items: center;
   padding: 8px 16px;
   gap: 4px;
-  width: auto;
+  width: 157px;
   height: 36px;
   background: linear-gradient(306.12deg, #ED693C 21.1%, #FDC60B 84.08%);
   border: 1px solid #DA6137;
@@ -65,7 +65,7 @@ const doClicked = (event:any) => {
   align-items: center;
   padding: 8px 16px;
   gap: 4px;
-  width: 107px;
+  width: 157px;
   height: 36px;
   background: #000000;
   border-radius: 12px;
