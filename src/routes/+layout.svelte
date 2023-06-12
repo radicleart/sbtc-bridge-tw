@@ -78,7 +78,7 @@
 </script>
 
 {#if inited}
-	<div class="bg-gray-1000 bg-[url('$lib/assets/bg-lines.png')] text-white font-extralight min-h-screen">
+	<div class="bg-gray-1000 bg-[url('$lib/assets/bg-lines.png')] text-white font-extralight min-h-screen py-8">
 		<div>
 			<Header on:init_application={initApplication}></Header>
 		</div>

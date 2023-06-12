@@ -101,12 +101,14 @@
       </button>
     </div>
     <div class="hidden lg:flex">
-			<NavButton label={'Settings'} target={'settings'} on:clicked/>
-			{#if $sbtcConfig.loggedIn}
-				<NavButton label={'My Account'} target={'account'} on:clicked/>
-			{:else}
-				<NavButton label={'Connect Wallet'} target={'connect'} on:clicked/>
-			{/if}
+			<div class="flex items-center space-x-6">
+				<NavButton label={'Settings'} target={'settings'} on:clicked/>
+				{#if $sbtcConfig.loggedIn}
+					<NavButton label={'My account'} target={'account'} on:clicked/>
+				{:else}
+					<NavButton label={'Connect wallet'} target={'connect'} on:clicked/>
+				{/if}
+			</div>
     </div>
   </nav>
   <!-- Mobile menu, show/hide based on menu open state. -->
@@ -132,9 +134,9 @@
           <div class="py-6">
 						<NavButton label={'Settings'} target={'settings'} on:clicked/>
 						{#if $sbtcConfig.loggedIn}
-							<NavButton label={'My Account'} target={'account'} on:clicked/>
+							<NavButton label={'My account'} target={'account'} on:clicked/>
 						{:else}
-							<NavButton label={'Connect Wallet'} target={'connect'} on:clicked/>
+							<NavButton label={'Connect wallet'} target={'connect'} on:clicked/>
 						{/if}
           </div>
         </div>
