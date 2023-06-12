@@ -6,9 +6,9 @@
 		url('/fonts/CircularStd-Light.woff2') format('woff2');
 	font-weight: 200;
 	font-display: swap;
-  }
-  
-  @font-face {
+}
+
+@font-face {
 	font-family: 'Circular Std';
 	src:
 		local('CircularStd'),
@@ -16,9 +16,9 @@
 		url('/fonts/CircularStd-Medium.woff2') format('woff2');
 	font-weight: normal;
 	font-display: swap;
-  }
-  
-  @font-face {
+}
+
+@font-face {
 	font-family: 'Circular Std';
 	src:
 		local('CircularStd'),
@@ -26,30 +26,18 @@
 		url('/fonts/CircularStd-Black.woff2') format('woff2');
 	font-weight: 700;
 	font-display: swap;
-  }
-  
-  
-  @tailwind base;
-  @tailwind components;
-  @tailwind utilities;
+}
+
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 
 body, html {
   height: 100%;
-  font-size: 1.1rem;
-  font-family: 'Circular Std';
 }
 
-svg {
-	display: inline;
-}
-.text-faq-link {
-    color: #ED693C;
-}
-
-.pointer {
-	cursor: pointer;
-}
 
 .nav-logo {
 	display: inline;
@@ -89,19 +77,19 @@ svg {
 .menu-panel {
 	padding: 8px 12px;
 	gap: 8px;
-	
+
 	width: 387px;
 	height: 42px;
-	
+
 	background: rgba(64, 64, 64, 0.3);
 }
 .menu-switcher {
-	box-sizing: border-box;	
+	box-sizing: border-box;
 	display: flex;
 	flex-direction: row;
 	align-items: center;
 	padding: 0px 8px;
-	gap: 4px;	
+	gap: 4px;
 	width: 74px;
 	height: 24px;
 	border: 1px solid #FFFFFF;
@@ -188,24 +176,24 @@ svg {
 .menu-settings-2 {
 	width: 218px;
 	height: 24px;
-	
+
 	/* base/Light */
-	
+
 	font-family: 'Circular Std';
 	font-style: normal;
 	font-weight: 300;
 	font-size: 16px;
 	line-height: 24px;
 	/* identical to box height, or 150% */
-	
-	
+
+
 	/* Main/White */
-	
+
 	color: #FFFFFF;
-	
-	
+
+
 	/* Inside auto layout */
-	
+
 	flex: none;
 	order: 1;
 	align-self: stretch;

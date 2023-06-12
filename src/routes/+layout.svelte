@@ -78,71 +78,13 @@
 </script>
 
 {#if inited}
-<div class="page background text-white">
-	<div class="header " style="z-index: 7;">
-		<Header on:init_application={initApplication}></Header>
+	<div class="bg-gray-1000 bg-[url('$lib/assets/bg-lines.png')] text-white font-extralight min-h-screen">
+		<div>
+			<Header on:init_application={initApplication}></Header>
+		</div>
+		<div class="mx-auto p-6 lg:px-8 py-16">
+			<slot></slot>
+		</div>
+		<Footer></Footer>
 	</div>
-	<div class="wrapper">
-		<slot></slot>
-	</div>
-	<Footer></Footer>
-</div>
 {/if}
-
-<style>
-.page {
-	display: flex;
-	flex-direction: column;
-	align-items: flex-start;
-	padding: 32px 0px;
-	gap: 40px;
-	isolation: isolate;
-
-	position: relative;
-    min-height: 100%;
-    margin: 0;
-
-	/* Base/Gray/1000 */
-
-	background: #121212;
-}
-.background {
-  background-image: url("$lib/assets/bg-lines.png");
-  background-size: cover;
-}
-.header {
-	display: flex;
-	flex-direction: column;
-	align-items: flex-start;
-	padding: 0px;
-
-	width: 100%;
-	height: 91px;
-
-
-	/* Inside auto layout */
-
-	flex: none;
-	order: 1;
-	flex-grow: 0;
-	z-index: 1;
-}
-.wrapper {
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
-	padding: 48px 25px;
-	gap: 10px;
-
-	width: 100%;
-	min-height: 60vh;
-	min-height: 60vh;
-	max-height: auto;
-	flex: none;
-	order: 2;
-	flex-grow: 0;
-	z-index: 2;
-}
-
-</style>

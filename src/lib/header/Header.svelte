@@ -5,24 +5,18 @@
 	import { sbtcConfig } from '$stores/stores';
 	import type { SbtcConfig } from '$types/sbtc_config';
 	import { goto } from "$app/navigation";
-	import { breakpoint1 } from '$lib/utils'
 	import { loginStacksJs } from '$lib/stacks_connect'
 	import { logUserOut } from '$lib/stacks_connect'
 	import AccountMenu from './AccountMenu.svelte'
 	import SettingsMenu from './SettingsMenu.svelte'
+	import NavButton from './NavButton.svelte';
 
 	const dispatch = createEventDispatcher();
 
-	$: outerWidth = 0
-	$: innerWidth = 0
-	$: outerHeight = 0
-	$: innerHeight = 0
-    $: hidden = innerWidth < breakpoint1;
-	$: containerClass = (!hidden) ? 'container1' : 'container2';
 	let showSettingsMenu = false;
 	let showAccountMenu = false;
 	let menuTarget:{ offsetTop: number; offsetLeft: number } | undefined;
-	
+
 	const navAction = (evt:any) => {
 		const details = evt.detail;
 		if (details.action === 'settings') {
@@ -32,9 +26,10 @@
 		} else if (details.action === 'connect') {
 			doLogin()
 		}
-	} 
+	}
+
 	const doLogout = () => {
-		logUserOut(); 
+		logUserOut();
 		showSettingsMenu = false;
 		showAccountMenu = false;
 		menuTarget = undefined;
@@ -46,10 +41,6 @@
 			return conf;
 		});
 		goto('/')
-	}
-
-	const toggle = () => {
-		// collapse menu
 	}
 
 	const doLogin = async () => {
@@ -87,99 +78,67 @@
 			showAccountMenu = true;
 		}
 	}
-
 </script>
-<div class="nav-wrapper">
-	{#if !hidden}
-	<div class={containerClass} color="none">
-		<Brand />
-		<Items on:clicked={navAction}/>
-		{#if showSettingsMenu}<SettingsMenu {menuTarget}/>{/if}
-		{#if showAccountMenu}<AccountMenu {menuTarget} on:init_logout={() => doLogout()}/>{/if}
-	</div>
-	{:else}
-	<div class={containerClass}>
-		<Brand />
-		<div class="flex order-3 ">
-			<button on:click={toggle} type="button" class="focus:outline-none whitespace-normal m-0.5 rounded-lg focus:ring-2 p-1.5 focus:ring-gray-400  hover:bg-gray-100 dark:hover:bg-gray-600 ml-3" aria-label="Open main menu"><span class="sr-only">Open main menu</span> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" class="h-6 w-6 shrink-0" aria-label="bars 3" fill="none" viewBox="0 0 24 24" stroke-width="2"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"></path> </svg></button>
-		</div>
-	</div>
-	{/if}
-</div>
-<svelte:window bind:innerWidth bind:outerWidth bind:innerHeight bind:outerHeight />
-  
-<style>
-.nav-wrapper {
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
-	padding: 24px 215px;
-	gap: 10px;
 
-	width: 100%;
-	height: 91px;
+<header>
+  <nav class="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8" aria-label="Global">
+    <div class="flex items-center gap-x-12">
+			<Brand />
 
+			<div class="hidden lg:flex lg:gap-x-8">
+				<Items class={'font-normal text-base text-white px-4 py-2 rounded-lg hover:bg-white/[8%] focus:bg-white/[16%]'} on:clicked={navAction}/>
+			</div>
 
-	/* Inside auto layout */
+			{#if showSettingsMenu}<SettingsMenu {menuTarget}/>{/if}
+			{#if showAccountMenu}<AccountMenu {menuTarget} on:init_logout={() => doLogout()}/>{/if}
+    </div>
+    <div class="flex lg:hidden">
+      <button type="button" class="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700">
+        <span class="sr-only">Open main menu</span>
+        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+        </svg>
+      </button>
+    </div>
+    <div class="hidden lg:flex">
+			<NavButton label={'Settings'} target={'settings'} on:clicked/>
+			{#if $sbtcConfig.loggedIn}
+				<NavButton label={'My Account'} target={'account'} on:clicked/>
+			{:else}
+				<NavButton label={'Connect Wallet'} target={'connect'} on:clicked/>
+			{/if}
+    </div>
+  </nav>
+  <!-- Mobile menu, show/hide based on menu open state. -->
+  <div class="lg:hidden" role="dialog" aria-modal="true">
+    <!-- Background backdrop, show/hide based on slide-over state. -->
+    <div class="fixed inset-0 z-10"></div>
+    <div class="fixed inset-y-0 right-0 z-10 w-full overflow-y-auto bg-black-01 px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
+      <div class="flex items-center justify-between">
+				<Brand />
 
-	flex: none;
-	order: 0;
-	flex-grow: 0;
-}
-.container1 {
-	display: flex;
-	flex-direction: row;
-	align-items: center;
-	padding: 0px;
-	gap: 64px;
-
-	width: 100%;
-	height: 43px;
-
-
-	/* Inside auto layout */
-
-	flex: none;
-	order: 0;
-	flex-grow: 0;
-	justify-content: center;
-}
-.container1 {
-	display: flex;
-	flex-direction: row;
-	align-items: center;
-	padding: 0px;
-	gap: 64px;
-
-	width: 100%;
-	height: 43px;
-
-
-	/* Inside auto layout */
-
-	flex: none;
-	order: 0;
-	flex-grow: 0;
-	justify-content: center;
-}
-.container2 {
-		display: flex;
-		flex-direction: row;
-		align-items: center;
-		padding: 0px;
-		gap: 64px;
-
-		min-width: 200%;
-		height: 43px;
-
-
-		/* Inside auto layout */
-
-		flex: none;
-		order: 0;
-		flex-grow: 0;
-		justify-content: space-around;
-}
-
-</style>
+        <button type="button" class="-m-2.5 rounded-md p-2.5 text-gray-700">
+          <span class="sr-only">Close menu</span>
+          <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+      <div class="mt-6 flow-root">
+        <div class="-my-6 divide-y divide-gray-500/10">
+          <div class="space-y-2 py-6">
+						<Items class={'-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-white hover:bg-gray-1000'} on:clicked={navAction}/>
+          </div>
+          <div class="py-6">
+						<NavButton label={'Settings'} target={'settings'} on:clicked/>
+						{#if $sbtcConfig.loggedIn}
+							<NavButton label={'My Account'} target={'account'} on:clicked/>
+						{:else}
+							<NavButton label={'Connect Wallet'} target={'connect'} on:clicked/>
+						{/if}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
