@@ -126,8 +126,5 @@ export default {
         "02": "4px 4px 12px -2px rgba(117,139,222,0.6), -4px -4px 12px -2px rgba(91,109,174,0.6)"
       },
     },
-  },
-  plugins: [
-    require('flowbite/plugin')
-  ],
+  }
 }
