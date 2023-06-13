@@ -78,11 +78,11 @@
 </script>
 
 {#if inited}
-	<div class="bg-gray-1000 bg-[url('$lib/assets/bg-lines.png')] text-white font-extralight min-h-screen py-8">
+	<div class="bg-gray-1000 bg-[url('$lib/assets/bg-lines.png')] bg-cover text-white font-extralight min-h-screen py-8">
 		<div>
 			<Header on:init_application={initApplication}></Header>
 		</div>
-		<div class="mx-auto p-6 lg:px-8 py-16">
+		<div class="mx-auto p-6 lg:px-8 py-8">
 			<slot></slot>
 		</div>
 		<Footer></Footer>

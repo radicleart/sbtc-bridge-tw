@@ -3,7 +3,10 @@
 import defaultTheme from 'tailwindcss/defaultTheme';
 
 export default {
-  content: ['./src/**/*.{html,js,svelte,ts}'],
+  content: [
+    './src/**/*.{html,js,svelte,ts}',
+    './node_modules/flowbite-svelte/**/*.{html,js,svelte,ts}'
+  ],
   theme: {
     colors: {
       transparent: 'transparent',
@@ -124,5 +127,7 @@ export default {
       },
     },
   },
-  plugins: [],
+  plugins: [
+    require('flowbite/plugin')
+  ],
 }
