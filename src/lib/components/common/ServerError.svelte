@@ -24,7 +24,7 @@ import { CONFIG } from '$lib/config';
                 <p class="text-hint">Temporarily problems connecting to the bridge.</p>
                 <p class="text-hint">Please try later.</p>
                 {/if}
-                <p class="text-hint-light">For more info about the sBTC Brigde, check <a class="text-hint-link" href="/faq">the FAQ page.</a></p>
+                <p class="text-hint-light">For more info about the sBTC Bridge, check <a class="text-hint-link" href="/faq">the FAQ page.</a></p>
             </div>
         </div>
     </div>

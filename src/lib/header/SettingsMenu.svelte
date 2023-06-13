@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { createEventDispatcher } from "svelte";
 	import { CONFIG, setConfig } from '$lib/config';
-	import { truncate } from '$lib/utils'
+	import { truncate, explorerAddressUrl, explorerBtcAddressUrl } from '$lib/utils'
 	import { sbtcConfig } from '$stores/stores';
 	import { onMount } from 'svelte';
 	import type { SbtcConfig } from '$types/sbtc_config';
@@ -16,9 +16,21 @@
 		const contract = CONFIG.VITE_SBTC_CONTRACT_ID
 		return truncate(contract.split('.')[0]) + '.' + contract.split('.')[1]
 	}
+	const getCoordinator = () => {
+		if ($sbtcConfig?.sbtcContractData?.coordinator) {
+			return truncate($sbtcConfig?.sbtcContractData?.coordinator?.addr.value, 8)
+		}
+		return 'not known'
+	}
+	const getOwner = () => {
+		if ($sbtcConfig?.sbtcContractData?.contractOwner) {
+			return truncate($sbtcConfig.sbtcContractData.contractOwner, 8)
+		}
+		return 'not known'
+	}
 	const getAddress = () => {
 		if ($sbtcConfig?.sbtcContractData?.sbtcWalletAddress) {
-			return truncate($sbtcConfig.sbtcContractData.sbtcWalletAddress)
+			return truncate($sbtcConfig.sbtcContractData.sbtcWalletAddress, 8).toUpperCase()
 		}
 		return 'not connected'
 	}
@@ -62,10 +74,10 @@
 		if (menuTarget && menuTarget.offsetLeft) {
 			//style = "position: absolute; top: " + 120 + "; right: " + 120;
 			style = "transform: translate3d(" + (menuTarget.offsetLeft - 290) + "px, " + (40 + menuTarget.offsetTop) + "px, 0px); position: absolute; inset: 0px auto auto 0px; margin: 0px; ";
-			inited = true;
 		} else {
 			style = "transform: translate3d(" + 623.636 + "px, " + 102.2727 + "px, 0px); position: absolute; inset: 0px auto auto 0px; margin: 0px; ";
 		}
+		inited = true;
 	})
 </script>
 
@@ -90,21 +102,51 @@
 	</div>
 	<div class="menu-panel grid grid-cols-6 gap-3 border-none">
 		<div class="col-span-2 menu-text-col1">sBTC Contract:</div>
-		<div class="col-span-3 menu-text-col2">{getContractAddress()}</div>
+		<div class="col-span-3 menu-text-col2"><a href={explorerAddressUrl(CONFIG.VITE_SBTC_CONTRACT_ID)} target="_blank">{getContractAddress()}</a></div>
 		<div class="col-span-1 text-right">
-			<svg width="16" height="18" viewBox="0 0 16 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-				<path d="M5.5 9H8.625M5.5 11.5H8.625M5.5 14H8.625M11.125 14.625H13C13.4973 14.625 13.9742 14.4275 14.3258 14.0758C14.6775 13.7242 14.875 13.2473 14.875 12.75V4.09C14.875 3.14417 14.1708 2.34167 13.2283 2.26333C12.9167 2.23749 12.6047 2.21526 12.2925 2.19667M12.2925 2.19667C12.3478 2.3759 12.3751 2.56243 12.375 2.75C12.375 2.91576 12.3092 3.07473 12.1919 3.19194C12.0747 3.30915 11.9158 3.375 11.75 3.375H8C7.655 3.375 7.375 3.095 7.375 2.75C7.375 2.5575 7.40417 2.37167 7.45833 2.19667M12.2925 2.19667C12.0567 1.43167 11.3433 0.875 10.5 0.875H9.25C8.84937 0.875094 8.45929 1.00345 8.13688 1.24128C7.81448 1.47911 7.57669 1.81392 7.45833 2.19667M7.45833 2.19667C7.145 2.21583 6.83333 2.23833 6.52167 2.26333C5.57917 2.34167 4.875 3.14417 4.875 4.09V5.875M4.875 5.875H2.0625C1.545 5.875 1.125 6.295 1.125 6.8125V16.1875C1.125 16.705 1.545 17.125 2.0625 17.125H10.1875C10.705 17.125 11.125 16.705 11.125 16.1875V6.8125C11.125 6.295 10.705 5.875 10.1875 5.875H4.875ZM3.625 9H3.63167V9.00667H3.625V9ZM3.625 11.5H3.63167V11.5067H3.625V11.5ZM3.625 14H3.63167V14.0067H3.625V14Z" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-			</svg>
+			<a href={explorerAddressUrl(CONFIG.VITE_SBTC_CONTRACT_ID)} target="_blank">
+				<svg width="12" height="11" viewBox="0 0 12 11" fill="none" xmlns="http://www.w3.org/2000/svg">
+					<path fill-rule="evenodd" clip-rule="evenodd" d="M0.193919 10.753C0.260005 10.8261 0.339861 10.8855 0.428917 10.9278C0.517974 10.97 0.614485 10.9943 0.712933 10.9992C0.81138 11.0041 0.909833 10.9896 1.00266 10.9565C1.09549 10.9233 1.18087 10.8722 1.25392 10.806L10.4999 2.44V5.25C10.4999 5.44891 10.5789 5.63968 10.7196 5.78033C10.8602 5.92098 11.051 6 11.2499 6C11.4488 6 11.6396 5.92098 11.7802 5.78033C11.9209 5.63968 11.9999 5.44891 11.9999 5.25V0.75C11.9999 0.551088 11.9209 0.360322 11.7802 0.21967C11.6396 0.0790175 11.4488 0 11.2499 0H6.74992C6.55101 4.19176e-09 6.36024 0.0790175 6.21959 0.21967C6.07894 0.360322 5.99992 0.551088 5.99992 0.75C5.99992 0.948912 6.07894 1.13968 6.21959 1.28033C6.36024 1.42098 6.55101 1.5 6.74992 1.5H9.30292L0.246919 9.694C0.173784 9.76009 0.114394 9.83994 0.0721438 9.929C0.029894 10.0181 0.00561402 10.1146 0.000691651 10.213C-0.00423072 10.3115 0.0103012 10.4099 0.0434568 10.5027C0.0766124 10.5956 0.127741 10.6799 0.193919 10.753Z" fill="white"/>
+				</svg>
+			</a>
+		</div>
+	</div>
+	<div class="menu-panel grid grid-cols-6 gap-3 border-none">
+		<div class="col-span-2 menu-text-col1">Contract Owner:</div>
+		<div class="col-span-3 menu-text-col2"><a href={explorerAddressUrl(CONFIG.VITE_SBTC_CONTRACT_ID)} target="_blank">{getOwner()}</a></div>
+		<div class="col-span-1 text-right">
+			<a href={explorerAddressUrl(CONFIG.VITE_SBTC_CONTRACT_ID)} target="_blank">
+				<svg width="12" height="11" viewBox="0 0 12 11" fill="none" xmlns="http://www.w3.org/2000/svg">
+					<path fill-rule="evenodd" clip-rule="evenodd" d="M0.193919 10.753C0.260005 10.8261 0.339861 10.8855 0.428917 10.9278C0.517974 10.97 0.614485 10.9943 0.712933 10.9992C0.81138 11.0041 0.909833 10.9896 1.00266 10.9565C1.09549 10.9233 1.18087 10.8722 1.25392 10.806L10.4999 2.44V5.25C10.4999 5.44891 10.5789 5.63968 10.7196 5.78033C10.8602 5.92098 11.051 6 11.2499 6C11.4488 6 11.6396 5.92098 11.7802 5.78033C11.9209 5.63968 11.9999 5.44891 11.9999 5.25V0.75C11.9999 0.551088 11.9209 0.360322 11.7802 0.21967C11.6396 0.0790175 11.4488 0 11.2499 0H6.74992C6.55101 4.19176e-09 6.36024 0.0790175 6.21959 0.21967C6.07894 0.360322 5.99992 0.551088 5.99992 0.75C5.99992 0.948912 6.07894 1.13968 6.21959 1.28033C6.36024 1.42098 6.55101 1.5 6.74992 1.5H9.30292L0.246919 9.694C0.173784 9.76009 0.114394 9.83994 0.0721438 9.929C0.029894 10.0181 0.00561402 10.1146 0.000691651 10.213C-0.00423072 10.3115 0.0103012 10.4099 0.0434568 10.5027C0.0766124 10.5956 0.127741 10.6799 0.193919 10.753Z" fill="white"/>
+				</svg>
+			</a>
+		</div>
+	</div>
+	<div class="menu-panel grid grid-cols-6 gap-3 border-none">
+		<div class="col-span-2 menu-text-col1">Coordinator:</div>
+		<div class="col-span-3 menu-text-col2"><a href={explorerAddressUrl(CONFIG.VITE_SBTC_CONTRACT_ID)} target="_blank">{getCoordinator()}</a></div>
+		<div class="col-span-1 text-right">
+			<a href={explorerAddressUrl(CONFIG.VITE_SBTC_CONTRACT_ID)} target="_blank">
+				<svg width="12" height="11" viewBox="0 0 12 11" fill="none" xmlns="http://www.w3.org/2000/svg">
+					<path fill-rule="evenodd" clip-rule="evenodd" d="M0.193919 10.753C0.260005 10.8261 0.339861 10.8855 0.428917 10.9278C0.517974 10.97 0.614485 10.9943 0.712933 10.9992C0.81138 11.0041 0.909833 10.9896 1.00266 10.9565C1.09549 10.9233 1.18087 10.8722 1.25392 10.806L10.4999 2.44V5.25C10.4999 5.44891 10.5789 5.63968 10.7196 5.78033C10.8602 5.92098 11.051 6 11.2499 6C11.4488 6 11.6396 5.92098 11.7802 5.78033C11.9209 5.63968 11.9999 5.44891 11.9999 5.25V0.75C11.9999 0.551088 11.9209 0.360322 11.7802 0.21967C11.6396 0.0790175 11.4488 0 11.2499 0H6.74992C6.55101 4.19176e-09 6.36024 0.0790175 6.21959 0.21967C6.07894 0.360322 5.99992 0.551088 5.99992 0.75C5.99992 0.948912 6.07894 1.13968 6.21959 1.28033C6.36024 1.42098 6.55101 1.5 6.74992 1.5H9.30292L0.246919 9.694C0.173784 9.76009 0.114394 9.83994 0.0721438 9.929C0.029894 10.0181 0.00561402 10.1146 0.000691651 10.213C-0.00423072 10.3115 0.0103012 10.4099 0.0434568 10.5027C0.0766124 10.5956 0.127741 10.6799 0.193919 10.753Z" fill="white"/>
+				</svg>
+			</a>
 		</div>
 	</div>
 	<div class="menu-panel grid grid-cols-6 gap-3 border-none">
 		<div class="col-span-2 menu-text-col1">sBTC Wallet:</div>
-		<div class="col-span-3 menu-text-col2">{getAddress()}</div>
+		{#if $sbtcConfig?.sbtcContractData?.sbtcWalletAddress}
+		<div class="col-span-3 menu-text-col2"><a href={explorerBtcAddressUrl(getAddress())} target="_blank">{getAddress()}</a></div>
 		<div class="col-span-1 text-right">
-			<svg width="16" height="18" viewBox="0 0 16 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-				<path d="M5.5 9H8.625M5.5 11.5H8.625M5.5 14H8.625M11.125 14.625H13C13.4973 14.625 13.9742 14.4275 14.3258 14.0758C14.6775 13.7242 14.875 13.2473 14.875 12.75V4.09C14.875 3.14417 14.1708 2.34167 13.2283 2.26333C12.9167 2.23749 12.6047 2.21526 12.2925 2.19667M12.2925 2.19667C12.3478 2.3759 12.3751 2.56243 12.375 2.75C12.375 2.91576 12.3092 3.07473 12.1919 3.19194C12.0747 3.30915 11.9158 3.375 11.75 3.375H8C7.655 3.375 7.375 3.095 7.375 2.75C7.375 2.5575 7.40417 2.37167 7.45833 2.19667M12.2925 2.19667C12.0567 1.43167 11.3433 0.875 10.5 0.875H9.25C8.84937 0.875094 8.45929 1.00345 8.13688 1.24128C7.81448 1.47911 7.57669 1.81392 7.45833 2.19667M7.45833 2.19667C7.145 2.21583 6.83333 2.23833 6.52167 2.26333C5.57917 2.34167 4.875 3.14417 4.875 4.09V5.875M4.875 5.875H2.0625C1.545 5.875 1.125 6.295 1.125 6.8125V16.1875C1.125 16.705 1.545 17.125 2.0625 17.125H10.1875C10.705 17.125 11.125 16.705 11.125 16.1875V6.8125C11.125 6.295 10.705 5.875 10.1875 5.875H4.875ZM3.625 9H3.63167V9.00667H3.625V9ZM3.625 11.5H3.63167V11.5067H3.625V11.5ZM3.625 14H3.63167V14.0067H3.625V14Z" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-			</svg>
+			<a href={explorerBtcAddressUrl(getAddress())} target="_blank">
+				<svg width="12" height="11" viewBox="0 0 12 11" fill="none" xmlns="http://www.w3.org/2000/svg">
+					<path fill-rule="evenodd" clip-rule="evenodd" d="M0.193919 10.753C0.260005 10.8261 0.339861 10.8855 0.428917 10.9278C0.517974 10.97 0.614485 10.9943 0.712933 10.9992C0.81138 11.0041 0.909833 10.9896 1.00266 10.9565C1.09549 10.9233 1.18087 10.8722 1.25392 10.806L10.4999 2.44V5.25C10.4999 5.44891 10.5789 5.63968 10.7196 5.78033C10.8602 5.92098 11.051 6 11.2499 6C11.4488 6 11.6396 5.92098 11.7802 5.78033C11.9209 5.63968 11.9999 5.44891 11.9999 5.25V0.75C11.9999 0.551088 11.9209 0.360322 11.7802 0.21967C11.6396 0.0790175 11.4488 0 11.2499 0H6.74992C6.55101 4.19176e-09 6.36024 0.0790175 6.21959 0.21967C6.07894 0.360322 5.99992 0.551088 5.99992 0.75C5.99992 0.948912 6.07894 1.13968 6.21959 1.28033C6.36024 1.42098 6.55101 1.5 6.74992 1.5H9.30292L0.246919 9.694C0.173784 9.76009 0.114394 9.83994 0.0721438 9.929C0.029894 10.0181 0.00561402 10.1146 0.000691651 10.213C-0.00423072 10.3115 0.0103012 10.4099 0.0434568 10.5027C0.0766124 10.5956 0.127741 10.6799 0.193919 10.753Z" fill="white"/>
+				</svg>
+			</a>
 		</div>
+		{:else}
+		<div class="col-span-3 menu-text-col2">{getAddress()}</div>
+		{/if}
 	</div>
 	<div class="grid grid-cols-6 gap-3 border-none pt-3">
 		<div class="col-span-2 p-3">

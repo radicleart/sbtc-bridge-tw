@@ -27,7 +27,7 @@ const burn = async () => {
       <label for="transact-path">Bitcoin Tx Id</label>
       <input type="text" id="btcTxid" class="form-control" bind:value={btcTxid}/>
       <div class="py-0">
-        <Button darkScheme={true} label={'Set BTC Wallet'} target={''} on:clicked={() => burn()}/>
+        <Button darkScheme={true} label={'Burn Baby Burn'} target={''} on:clicked={() => burn()}/>
       </div>
     </div>
 </div>
@@ -36,6 +36,7 @@ const burn = async () => {
   input {
     width: 100%;
     margin: 10px 0;
+    color: #000;
   }
   .row {
     margin-bottom: 40px;

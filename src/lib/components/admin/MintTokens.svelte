@@ -36,6 +36,7 @@ const mint = async () => {
   input {
     width: 100%;
     margin: 10px 0;
+    color: #000;
   }
   .row {
     margin-bottom: 40px;

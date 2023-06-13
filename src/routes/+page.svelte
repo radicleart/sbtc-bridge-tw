@@ -17,7 +17,7 @@
                 <p class="text-hint">
                     Please note that Lightning network is not supported at the moment.
                 </p>
-                <p class="text-hint-light">For more info about the sBTC Brigde, check <a class="text-hint-link" href="/faq">the FAQ page.</a></p>
+                <p class="text-hint-light">For more info about the sBTC Bridge, check <a class="text-hint-link" href="/faq">the FAQ page.</a></p>
             </div>
         </div>
         <a href="/start" class="btn">

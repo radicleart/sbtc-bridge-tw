@@ -24,6 +24,14 @@
 		dispatch('init_logout', { from: 'account-menu' });
 	}
 
+	const getStxBalance = () => {
+		try {
+			return ($sbtcConfig?.addressObject?.stacksTokenInfo?.stx) ? fmtMicroToStx($sbtcConfig.addressObject.stacksTokenInfo.stx.balance ) : 0.000000;
+		} catch(err) {
+			return 0.000000
+		}
+	}
+
 	const transformAddress = (address:string) => {
 		if (address) {
 			return truncate(address, 8).toUpperCase()
@@ -35,10 +43,10 @@
 		if (menuTarget && menuTarget.offsetLeft) {
 			//style = "position: absolute; top: " + 120 + "; right: " + 120;
 			style = "transform: translate3d(" + (menuTarget.offsetLeft - 280) + "px, " + (40 + menuTarget.offsetTop) + "px, 0px); position: absolute; inset: 0px auto auto 0px; margin: 0px; ";
-			inited = true;
 		} else {
 			style = "transform: translate3d(" + 623.636 + "px, " + 102.2727 + "px, 0px); position: absolute; inset: 0px auto auto 0px; margin: 0px; ";
 		}
+		inited = true;
 	})
 
 </script>
@@ -131,7 +139,7 @@
 				STX
 			</div>
 			<div class="col-span-4 menu-text-val text-right">
-				{fmtMicroToStx($sbtcConfig?.addressObject?.stacksTokenInfo.stx.balance || 0.000000)}
+				{getStxBalance()}
 			</div>
 		</div>
 	</div>

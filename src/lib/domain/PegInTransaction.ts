@@ -357,11 +357,11 @@ export default class PegInTransaction implements PegInTransactionI {
 			this.scureFee = 4000;
 		}
 		this.fees = [
-			this.scureFee * 0.8, //Math.floor((this.feeInfo.low_fee_per_kb / 1000) * vsize),
-			this.scureFee * 1.0, //Math.floor((this.feeInfo.medium_fee_per_kb / 1000) * vsize),
-			this.scureFee * 1.2, //Math.floor((this.feeInfo.high_fee_per_kb / 1000) * vsize),
+			this.scureFee * 8, //Math.floor((this.feeInfo.low_fee_per_kb / 1000) * vsize),
+			this.scureFee * 10, //Math.floor((this.feeInfo.medium_fee_per_kb / 1000) * vsize),
+			this.scureFee * 12, //Math.floor((this.feeInfo.high_fee_per_kb / 1000) * vsize),
 		]
-		this.fee = this.fees[index] * this.scureFee;
+		this.fee = this.fees[index];
 	}
 		
 	private addInputs = (tx:btc.Transaction) => {

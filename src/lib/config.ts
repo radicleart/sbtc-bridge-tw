@@ -1,6 +1,9 @@
 const TESTNET_CONFIG = {
     VITE_PUBLIC_APP_NAME: 'sBTC Bridge Testnet',
     VITE_PUBLIC_APP_VERSION: '1.0.0',
+    VITE_URI_BRIDGE: 'https://bridge.stx.eco',
+    VITE_URI_SIGN: 'https://sign.stx.eco',
+    VITE_URI_VOTE: 'https://vote.stx.eco',
     VITE_ORIGIN: 'https://sbtc.world',
     VITE_NETWORK: 'testnet',
     VITE_SBTC_WALLET: 'tb1q6zlpyrzvzjcrf6dlsctcrh9yl3dwfktsw0nclq',
@@ -17,6 +20,9 @@ const TESTNET_CONFIG = {
 const MAINNET_CONFIG = {
     VITE_PUBLIC_APP_NAME: 'sBTC Bridge',
     VITE_PUBLIC_APP_VERSION: '1.0.0',
+    VITE_URI_BRIDGE: 'https://bridge.stx.eco',
+    VITE_URI_SIGN: 'https://sign.stx.eco',
+    VITE_URI_VOTE: 'https://vote.stx.eco',
     VITE_ORIGIN: 'https://sbtc.world',
     VITE_NETWORK: 'mainnet',
     VITE_SBTC_WALLET: 'tb1q6ue638m4t5knwxl4kwhwyuffttlp0ffee3zn3e',
@@ -34,6 +40,9 @@ const MAINNET_CONFIG = {
 const DEVNET_CONFIG = {
     VITE_PUBLIC_APP_NAME: 'sBTC Bridge Devnet',
     VITE_PUBLIC_APP_VERSION: '1.0.0',
+    VITE_URI_BRIDGE: 'http://localhost:8080',
+    VITE_URI_SIGN: 'http://localhost:8081',
+    VITE_URI_VOTE: 'http://localhost:8082',
     VITE_ORIGIN: 'https://sbtc.world',
     VITE_NETWORK: 'testnet',
     VITE_SBTC_WALLET: 'tb1q6zlpyrzvzjcrf6dlsctcrh9yl3dwfktsw0nclq',
@@ -58,7 +67,11 @@ export function setConfig(search:string) {
     if (import.meta.env.MODE === 'linode-staging') {
         CONFIG.VITE_BRIDGE_API = 'https://testnet.stx.eco/bridge-api/v1'
     } else if (import.meta.env.MODE === 'development') {
-        //CONFIG.VITE_BRIDGE_API = 'https://testnet.stx.eco/bridge-api/v1'
+        CONFIG.VITE_BRIDGE_API = 'https://testnet.stx.eco/bridge-api/v1'
+        CONFIG.VITE_URI_BRIDGE = 'http://localhost:8080'
+        CONFIG.VITE_URI_SIGN = 'http://localhost:8081'
+        CONFIG.VITE_URI_VOTE = 'http://localhost:8082'
+    
         // toggle depending on location / ip address etc
         //CONFIG.VITE_BRIDGE_API = 'http://localhost:3010/bridge-api/v1'
     }

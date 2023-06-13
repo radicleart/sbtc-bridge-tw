@@ -62,7 +62,7 @@
 				await fetchSbtcBalance();
 			}
 			$sbtcConfig.sbtcContractData = data
-			if ($sbtcConfig.sbtcContractData.sbtcWalletAddress && !$sbtcConfig.sbtcWalletAddressInfo) $sbtcConfig.sbtcWalletAddressInfo = await fetchUtxoSet(data.sbtcWalletAddress);
+			//if ($sbtcConfig.sbtcContractData.sbtcWalletAddress && !$sbtcConfig.sbtcWalletAddressInfo) $sbtcConfig.sbtcWalletAddressInfo = await fetchUtxoSet(data.sbtcWalletAddress);
 		} catch (err) {
 			data = defaultSbtcConfig.sbtcContractData;
 		}

@@ -119,8 +119,6 @@ const commitAddresses = ():CommitKeysI => {
   const stacksAddress = (piTx && piTx.pegInData?.stacksAddress) ? piTx.pegInData?.stacksAddress : addrs.stxAddress;
   let fromBtcAddress = addrs.cardinal; //$sbtcConfig.peginRequest.fromBtcAddress || addrs.ordinal;
   let sbtcWalletAddress = $sbtcConfig.sbtcContractData.sbtcWalletAddress as string;
-  const sbtcWallet = sbtcWallets.find((o) => o.sbtcAddress === sbtcWalletAddress);
-  if (!sbtcWallet) throw new Error('No sBTC Wallet found for address: ' + sbtcWalletAddress)
   let testAddrs;
   if ($sbtcConfig.userSettings.testAddresses) {
     testAddrs = getTestAddresses(CONFIG.VITE_NETWORK);

@@ -8,11 +8,12 @@ import * as btc from '@scure/btc-signer';
 import { hexToBytes } from "@stacks/common";
 import { sendRawTxDirectMempool } from '$lib/bridge_api';
 import { sbtcConfig } from '$stores/stores';
-import { explorerBtcAddressUrl, fmtSatoshiToBitcoin } from "$lib/utils";
+import { explorerBtcAddressUrl, fmtSatoshiToBitcoin, convertOutputsBlockCypher } from "$lib/utils";
 import type { PegInTransactionI } from '$lib/domain/PegInTransaction';
 import type { PegOutTransactionI } from '$lib/domain/PegOutTransaction';
 import { savePeginCommit } from '$lib/bridge_api';
 import Button from '$lib/components/shared/Button.svelte';
+import type { PeginRequestI } from 'sbtc-bridge-lib' 
 
 export let piTx: PegInTransactionI|PegOutTransactionI;
 
@@ -20,6 +21,7 @@ const dispatch = createEventDispatcher();
 let sigData:SigData;
 let currentTx:string;
 let errorReason: string|undefined;
+let cypherResp: any|undefined;
 
 const getExplorerUrl = () => {
   return explorerBtcAddressUrl(piTx.pegInData.sbtcWalletAddress)
@@ -47,14 +49,6 @@ const updateTransaction = () => {
   dispatch('update_transaction', { success: true });
 }
 
-const btnClass = (bb:boolean) => {
-  if ($sbtcConfig.pegIn) {
-    return (bb) ? 'mx-2 w-25 btn btn-outline-info' : 'mx-2 w-25 btn btn-info';
-  } else {
-    return (bb) ? 'mx-2 w-25 btn btn-outline-warning' : 'mx-2 w-25 btn btn-warning';
-  }
-}
-
 let resp:any;
 let broadcasted:boolean;
 const broadcastTransaction = async (psbtHex:string) => {
@@ -74,22 +68,23 @@ const broadcastTransaction = async (psbtHex:string) => {
     resp = await sendRawTxDirectMempool(txHex);
     console.log('sendRawTxDirectMempool: ', resp);
     if (resp && resp.tx) {
-
+      broadcasted = true;
       try {
         if ($sbtcConfig.userSettings.useOpDrop) {
-          const peginRequest = piTx.getOpDropPeginRequest()
+          const peginRequest:PeginRequestI = piTx.getOpDropPeginRequest()
           await savePeginCommit(peginRequest)
         } else {
-          const peginRequest = piTx.getOpReturnPeginRequest()
-          peginRequest.btcTxid = resp.tx.hash;
-          peginRequest.vout0 = resp.tx.vout[0];
-          peginRequest.vout = resp.tx.vout[1];
+          const peginRequest:PeginRequestI = piTx.getOpReturnPeginRequest()
+          peginRequest.status = 5;
+          peginRequest.btcTxid = (resp.tx.hash) ? resp.tx.hash : resp.tx.txid;
+          convertOutputsBlockCypher(resp.tx, peginRequest)
           await savePeginCommit(peginRequest);
+          cypherResp = resp;
         }
       } catch (err) {
+        console.log('Error saving pegin request', err)
         // duplicate.. ok to ignore
       }
-      broadcasted = true;
     } else if (resp && resp.error) {
       errMessage = resp.error;
       broadcasted = false;
@@ -120,12 +115,9 @@ onMount(async () => {
 <div class="frame26">
   <div class="frame28457">
     <div class="text-hint">
+      {#if !broadcasted}
       Click sign to sign the PSBT and broadcast your deposit transaction.
-      {#if broadcasted}
-      <p>Your transaction has been sent to the <a href={getExplorerUrl()} target="_blank" rel="noreferrer">Bitcoin network</a>.</p>
-      <p>Once confirmed your sBTC will be minted to your Stacks Wallet. </p>
       {/if}
-      {#if errorReason}<div class="text-warning-400"><p>{errorReason}</p></div>{/if}
     </div>
     <div class="frame28454">
       <div class="frame28455">
@@ -146,10 +138,24 @@ onMount(async () => {
       </div>
     </div>
   </div>
+  {#if !broadcasted && !errorReason}
   <div class="frame28">
-    <Button darkScheme={true} label={'Make changes'} target={'status-check'} on:clicked={updateTransaction}/>
+    <Button darkScheme={true} label={'Make changes'} target={'back'} on:clicked={updateTransaction}/>
     <Button darkScheme={false} label={'Sign'} target={'back'} on:clicked={requestSignPsbt}/>
   </div>
+  {:else if broadcasted}
+  <div class="frame28">
+    <p>View transaction on the <a class="text-info-500" href={getExplorerUrl()} target="_blank" rel="noreferrer">Bitcoin network</a>.</p>
+    <p>Once confirmed your sBTC will be minted to your Stacks Wallet. </p>
+  </div>
+  <div class="frame28">
+    <Button darkScheme={true} label={'Start over'} target={'status-check'} on:clicked={updateTransaction}/>
+  </div>
+  {:else if errorReason}
+  <div class="frame28">
+    {#if errorReason}<div class="text-warning-400"><p>{errorReason}</p></div>{/if}
+  </div>
+  {/if}
 </div>
 
 <style>

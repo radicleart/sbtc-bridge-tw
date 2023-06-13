@@ -32,7 +32,7 @@
 		} else if (details.action === 'connect') {
 			doLogin()
 		}
-	} 
+	}
 	const doLogout = () => {
 		logUserOut(); 
 		showSettingsMenu = false;
