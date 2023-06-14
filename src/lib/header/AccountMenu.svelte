@@ -152,23 +152,6 @@
 {/if}
 
 <style>
-.circle {
-	background-color: #5546FF;
-	border-radius: 50%;
-	width: 30px;
-	height: 30px;
-	align-content: center;
-	text-align: center;
-
-}
-
-.circle-orange {
-	background-color: #ED693C;
-}
-
-.circle-blue {
-	background-color: #5546FF;
-}
 .menu-text-logout {
 	font-family: 'Circular Std';
 	font-style: normal;

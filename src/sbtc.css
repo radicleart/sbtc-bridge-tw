@@ -6,9 +6,9 @@
 		url('/fonts/CircularStd-Light.woff2') format('woff2');
 	font-weight: 200;
 	font-display: swap;
-  }
-  
-  @font-face {
+}
+
+@font-face {
 	font-family: 'Circular Std';
 	src:
 		local('CircularStd'),
@@ -16,9 +16,9 @@
 		url('/fonts/CircularStd-Medium.woff2') format('woff2');
 	font-weight: normal;
 	font-display: swap;
-  }
-  
-  @font-face {
+}
+
+@font-face {
 	font-family: 'Circular Std';
 	src:
 		local('CircularStd'),
@@ -26,18 +26,16 @@
 		url('/fonts/CircularStd-Black.woff2') format('woff2');
 	font-weight: 700;
 	font-display: swap;
-  }
-  
-  
-  @tailwind base;
-  @tailwind components;
-  @tailwind utilities;
+}
+
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 
 body, html {
   height: 100%;
-  font-size: 1.1rem;
-  font-family: 'Circular Std';
 }
 p {
 	margin-bottom: 20px;
@@ -82,6 +80,7 @@ p {
 	border: 1px solid #DA6137;
 	border-radius: 12px;
   }
+
 .flasherize-button {
 	border-bottom: 1pt solid #FEDB63!important;
 	color: #fff!important;

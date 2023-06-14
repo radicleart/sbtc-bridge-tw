@@ -3,7 +3,6 @@ import * as btc from '@scure/btc-signer';
 import * as secp from '@noble/secp256k1';
 import type { AddressMempoolObject } from 'sbtc-bridge-lib' 
 import type { PeginRequestI } from 'sbtc-bridge-lib' 
-import { hex } from '@scure/base';
 
 export const COMMS_ERROR = 'Error communicating with the server. Please try later.'
 
@@ -14,8 +13,6 @@ const formatter = new Intl.NumberFormat('en-US', {
   // minimumFractionDigits: 0, // (this suffices for whole numbers, but will print 2500.10 as $2,500.1)
   // maximumFractionDigits: 0, // (causes 2500.99 to be printed as $2,501)
 })
-
-export const breakpoint1 = 1100
 
 const btcPrecision = 100000000
 const stxPrecision = 1000000

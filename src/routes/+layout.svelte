@@ -84,21 +84,13 @@
 </script>
 
 {#if inited}
-<div class="min-h-screen background flex flex-col justify-between text-white font-thin">
-	<div class="h-20 w-screen px-20 ">
-		{#key componentKey}
-		<Header on:init_application={initApplication}></Header>
-		{/key}
+	<div class="bg-gray-1000 bg-[url('$lib/assets/bg-lines.png')] bg-cover text-white font-extralight min-h-screen py-8">
+		<div>
+			<Header on:init_application={initApplication}></Header>
+		</div>
+		<div class="mx-auto p-6 lg:px-8 py-8">
+			<slot></slot>
+		</div>
+		<Footer></Footer>
 	</div>
-	<div class="flex justify-center items-start">
-		<slot></slot>
-	</div>
-	<div class="h-20 w-screen px-20">
-	<Footer></Footer>
-	</div>
-</div>
 {/if}
-
-<style>
-
-</style>
