@@ -3,17 +3,37 @@
 	import { Icon, ArrowsRightLeft, ClipboardDocument, ArrowUpRight } from "svelte-hero-icons"
 
 	import { CONFIG, setConfig } from '$lib/config';
-	import { truncate } from '$lib/utils'
+	import { truncate, explorerAddressUrl, explorerBtcAddressUrl } from '$lib/utils'
 	import { sbtcConfig } from '$stores/stores';
 	import type { SbtcConfig } from '$types/sbtc_config';
 	import { fetchSbtcBalance, addresses } from '$lib/stacks_connect'
 
-	const getAddress = () => {
+	const getContractAddress = () => {
+		const contract = CONFIG.VITE_SBTC_CONTRACT_ID
+		return truncate(contract.split('.')[0]) + '.' + contract.split('.')[1]
+	}
+	const getCoordinator = (full:boolean) => {
+		if ($sbtcConfig?.sbtcContractData?.coordinator) {
+			if (full) return $sbtcConfig.sbtcContractData.coordinator?.addr.value
+			return truncate($sbtcConfig?.sbtcContractData?.coordinator?.addr.value, 8)
+		}
+		return 'not known'
+	}
+	const getOwner = (full:boolean) => {
+		if ($sbtcConfig?.sbtcContractData?.contractOwner) {
+			if (full) return $sbtcConfig.sbtcContractData.contractOwner
+			return truncate($sbtcConfig.sbtcContractData.contractOwner, 8)
+		}
+		return 'not known'
+	}
+	const getAddress = (full:boolean) => {
 		if ($sbtcConfig?.sbtcContractData?.sbtcWalletAddress) {
-			return truncate($sbtcConfig.sbtcContractData.sbtcWalletAddress)
+			if (full) return $sbtcConfig.sbtcContractData.sbtcWalletAddress
+			return truncate($sbtcConfig.sbtcContractData.sbtcWalletAddress, 8).toUpperCase()
 		}
 		return 'not connected'
 	}
+
 	const toggleSettings = (arg:string) => {
 		const conf:SbtcConfig = $sbtcConfig;
 		if (typeof conf.userSettings === 'undefined') {
@@ -67,7 +87,7 @@
 	</span>
 </Button>
 <Dropdown
-	frameClass="rounded-lg !bg-black !border py-2 !border-gray-900"
+	frameClass="z-30 rounded-lg !bg-black !border py-2 !border-gray-900"
 	ulClass="py-1 w-full"
 	placement='bottom-end'
 >
@@ -89,21 +109,25 @@
 		<div class="px-4 py-2 bg-gray-1000 grid grid-cols-2 gap-2 items-center">
 			<p class="text-sm text-white font-normal">
 				sBTC wallet:
-				<span class="text-sm inline-block text-white font-extralight text-gray-100">{getAddress()}</span>
+				<span class="text-sm inline-block font-extralight text-gray-100">{getAddress(false)}</span>
 			</p>
 			<div class="ml-auto flex items-center">
-				<button class="h-8 w-8 rounded-md bg-black flex items-center justify-center border border-transparent hover:border-gray-900 transition duration-200">
+				<a href={explorerBtcAddressUrl(getAddress(true))} target="_blank" class="h-8 w-8 rounded-md bg-black flex items-center justify-center border border-transparent hover:border-gray-900 transition duration-200">
+					<Icon src="{ArrowUpRight}" mini class="-mr-0.5 h-5 w-5 text-white" aria-hidden="true" />
+				</a>
+				<!--<button class="h-8 w-8 rounded-md bg-black flex items-center justify-center border border-transparent hover:border-gray-900 transition duration-200">
 					<Icon src="{ClipboardDocument}" class="-mr-0.5 h-5 w-5 text-white" aria-hidden="true" />
 				</button>
+				-->
 			</div>
 		</div>
 		<div class="px-4 py-2 bg-gray-1000 grid grid-cols-2 gap-2 items-center">
 			<p class="text-sm text-white font-normal">
 				sBTC contract:
-				<span class="text-sm inline-block text-white font-extralight text-gray-100">—</span>
+				<span class="text-sm inline-block font-extralight text-gray-100">{getContractAddress()}</span>
 			</p>
 			<div class="ml-auto flex items-center">
-				<a href="#" class="h-8 w-8 rounded-md bg-black flex items-center justify-center border border-transparent hover:border-gray-900 transition duration-200">
+				<a href={explorerAddressUrl(CONFIG.VITE_SBTC_CONTRACT_ID)} target="_blank" class="h-8 w-8 rounded-md bg-black flex items-center justify-center border border-transparent hover:border-gray-900 transition duration-200">
 					<Icon src="{ArrowUpRight}" mini class="-mr-0.5 h-5 w-5 text-white" aria-hidden="true" />
 				</a>
 			</div>
@@ -111,10 +135,10 @@
 		<div class="px-4 py-2 bg-gray-1000 grid grid-cols-2 gap-2 items-center">
 			<p class="text-sm text-white font-normal">
 				Contract owner:
-				<span class="text-sm inline-block text-white font-extralight text-gray-100">—</span>
+				<span class="text-sm inline-block font-extralight text-gray-100">{getOwner(false)}</span>
 			</p>
 			<div class="ml-auto flex items-center">
-				<a href="#" class="h-8 w-8 rounded-md bg-black flex items-center justify-center border border-transparent hover:border-gray-900 transition duration-200">
+				<a href={explorerAddressUrl(getOwner(true))} target="_blank" class="h-8 w-8 rounded-md bg-black flex items-center justify-center border border-transparent hover:border-gray-900 transition duration-200">
 					<Icon src="{ArrowUpRight}" mini class="-mr-0.5 h-5 w-5 text-white" aria-hidden="true" />
 				</a>
 			</div>
@@ -122,10 +146,10 @@
 		<div class="px-4 py-2 bg-gray-1000 grid grid-cols-2 gap-2 items-center">
 			<p class="text-sm text-white font-normal">
 				Coordinator:
-				<span class="text-sm inline-block text-white font-extralight text-gray-100">—</span>
+				<span class="text-sm inline-block font-extralight text-gray-100">{getCoordinator(false)}</span>
 			</p>
 			<div class="ml-auto flex items-center">
-				<a href="#" class="h-8 w-8 rounded-md bg-black flex items-center justify-center border border-transparent hover:border-gray-900 transition duration-200">
+				<a href={explorerAddressUrl(getOwner(true))} target="_blank" class="h-8 w-8 rounded-md bg-black flex items-center justify-center border border-transparent hover:border-gray-900 transition duration-200">
 					<Icon src="{ArrowUpRight}" mini class="-mr-0.5 h-5 w-5 text-white" aria-hidden="true" />
 				</a>
 			</div>
