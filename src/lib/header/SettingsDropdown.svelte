@@ -67,14 +67,13 @@
 	</span>
 </Button>
 <Dropdown
-	headerClass="bg-black rounded-lg"
 	frameClass="rounded-lg !bg-black !border py-2 !border-gray-900"
 	ulClass="py-1 w-full"
 	placement='bottom-end'
 >
 	<div slot="header" class="bg-gray-1000 overflow-hidden py-1">
 		<div class="px-4 py-2 bg-gray-1000 grid grid-cols-2 gap-2">
-			<p class="block text-sm text-white font-normal">
+			<p class="text-sm text-white font-normal">
 				Network:
 				<span class="text-sm bg-primary-500 rounded-xl text-black ml-2 px-2 py-0.5 font-normal">
 					{CONFIG.VITE_NETWORK}
@@ -88,7 +87,7 @@
 			</div>
 		</div>
 		<div class="px-4 py-2 bg-gray-1000 grid grid-cols-2 gap-2 items-center">
-			<p class="block text-sm text-white font-normal">
+			<p class="text-sm text-white font-normal">
 				sBTC wallet:
 				<span class="text-sm inline-block text-white font-extralight text-gray-100">{getAddress()}</span>
 			</p>
@@ -99,7 +98,7 @@
 			</div>
 		</div>
 		<div class="px-4 py-2 bg-gray-1000 grid grid-cols-2 gap-2 items-center">
-			<p class="block text-sm text-white font-normal">
+			<p class="text-sm text-white font-normal">
 				sBTC contract:
 				<span class="text-sm inline-block text-white font-extralight text-gray-100">—</span>
 			</p>
@@ -110,7 +109,7 @@
 			</div>
 		</div>
 		<div class="px-4 py-2 bg-gray-1000 grid grid-cols-2 gap-2 items-center">
-			<p class="block text-sm text-white font-normal">
+			<p class="text-sm text-white font-normal">
 				Contract owner:
 				<span class="text-sm inline-block text-white font-extralight text-gray-100">—</span>
 			</p>
@@ -121,7 +120,7 @@
 			</div>
 		</div>
 		<div class="px-4 py-2 bg-gray-1000 grid grid-cols-2 gap-2 items-center">
-			<p class="block text-sm text-white font-normal">
+			<p class="text-sm text-white font-normal">
 				Coordinator:
 				<span class="text-sm inline-block text-white font-extralight text-gray-100">—</span>
 			</p>
