@@ -102,7 +102,7 @@
 						<span class="font-bold">STX</span>
 					</div>
 					<div class="ml-auto flex items-center">
-						<!-- {fmtMicroToStx($sbtcConfig?.addressObject?.stacksTokenInfo.stx.balance || 0.000000)} -->
+						{fmtMicroToStx($sbtcConfig?.addressObject?.stacksTokenInfo.stx.balance || 0.000000)}
 					</div>
 				</div>
 
