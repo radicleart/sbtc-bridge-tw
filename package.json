@@ -50,9 +50,10 @@
 		"@sveltejs/adapter-static": "^2.0.2",
 		"classnames": "^2.3.2",
 		"flowbite": "^1.6.5",
-		"flowbite-svelte": "^0.37.2",
+		"flowbite-svelte": "^0.37.5",
 		"sbtc-bridge-lib": "^1.0.19",
 		"svelte-local-storage-store": "^0.4.0",
-		"svelte-qrcode": "^1.0.0"
+		"svelte-qrcode": "^1.0.0",
+		"tailwind-merge": "^1.13.1"
 	}
 }

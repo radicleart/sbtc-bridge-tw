@@ -84,73 +84,21 @@
 </script>
 
 {#if inited}
-<div class="page background text-white">
-	<div class="header " style="z-index: 7;">
+<div class="min-h-screen background flex flex-col justify-between text-white font-thin">
+	<div class="h-20 w-screen px-20 ">
 		{#key componentKey}
 		<Header on:init_application={initApplication}></Header>
 		{/key}
 	</div>
-	<div class="wrapper">
+	<div class="flex justify-center items-start">
 		<slot></slot>
 	</div>
+	<div class="h-20 w-screen px-20">
 	<Footer></Footer>
+	</div>
 </div>
 {/if}
 
 <style>
-.page {
-	display: flex;
-	flex-direction: column;
-	align-items: flex-start;
-	padding: 32px 0px;
-	gap: 40px;
-	isolation: isolate;
-
-	position: relative;
-    min-height: 100%;
-    margin: 0;
-
-	/* Base/Gray/1000 */
-
-	background: #121212;
-}
-.background {
-  background-image: url("$lib/assets/bg-lines.png");
-  background-size: cover;
-}
-.header {
-	display: flex;
-	flex-direction: column;
-	align-items: flex-start;
-	padding: 0px;
-
-	width: 100%;
-	height: 91px;
-
-
-	/* Inside auto layout */
-
-	flex: none;
-	order: 1;
-	flex-grow: 0;
-	z-index: 1;
-}
-.wrapper {
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
-	padding: 48px 25px;
-	gap: 10px;
-
-	width: 100%;
-	min-height: 60vh;
-	min-height: 60vh;
-	max-height: auto;
-	flex: none;
-	order: 2;
-	flex-grow: 0;
-	z-index: 2;
-}
 
 </style>

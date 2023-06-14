@@ -5,10 +5,8 @@ export let darkScheme:boolean;
 export let label:string;
 export let target:string;
 
-let btnId="menu-btn";
-let btnTextId="menu-btn-text";
-let btnClass="menu-btn" + ' btn';
-let btnTextClass="menu-btn-text";
+let btnClass="menu-btn" + ' h-10 px-8 rounded-md cursor-pointer';
+let btnTextClass="text-black font-medium";
 
 if (darkScheme) {
   btnClass="menu-btn-dark" + ' btn';
@@ -23,29 +21,16 @@ const doClicked = (event:any) => {
 }
 
 </script>
-<div id={btnId} class={btnClass}>
-	<span id={btnTextId} class={btnTextClass + ' whitespace-nowrap '} on:keydown on:click={(event) => doClicked(event)}>
+<div class={btnClass}>
+	<span class={btnTextClass + ' whitespace-nowrap '} on:keydown on:click={(event) => doClicked(event)}>
 		{label}
 	</span>
 </div>
 
 <style>
-.btn {
-	cursor: pointer;
-}
 .menu-btn {
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  padding: 8px 16px;
-  gap: 4px;
-  width: 157px;
-  height: 36px;
   background: linear-gradient(306.12deg, #ED693C 21.1%, #FDC60B 84.08%);
   border: 1px solid #DA6137;
-  border-radius: 12px;
 }
 
 .menu-btn-text {
@@ -58,15 +43,6 @@ const doClicked = (event:any) => {
   color: #000000;
 }
 .menu-btn-dark {
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  padding: 8px 16px;
-  gap: 4px;
-  width: 157px;
-  height: 36px;
   background: #000000;
   border-radius: 12px;
 	border: 1px solid #FEDB63;

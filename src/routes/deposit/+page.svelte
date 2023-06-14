@@ -43,9 +43,9 @@ onMount(async () => {
 })
 
 </script>
-<div class="container">
+<div class="w-4/5 lg:w-3/5">
 	{#if inited}
-	<div class="frame28476">
+    <div class="flex flex-col gap-y-10">
 		{#if $sbtcConfig.userSettings?.useOpDrop}
 		{#key componentKey}
 		<TimeLine {timeLineStatus}/>
@@ -62,39 +62,7 @@ onMount(async () => {
 	{:else if errored}
 		<ServerError />
 	{/if}
-	</div>
+</div>
 
 <style>
-.container {
-	/* Container */
-	/* Auto layout */
-	display: flex;
-	flex-direction: row;
-	justify-content: center;
-	align-items: center;
-	padding: 0px;
-	gap: 64px;
-	width: 100%;
-	height: auto;
-	/* Inside auto layout */
-	flex: none;
-	order: 0;
-	flex-grow: 0;
-}
-.frame28476 {
-	/* Frame 28476 */
-	/* Auto layout */
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
-	padding: 0px;
-	gap: 24px;
-	width: 680px;
-	height: auto;
-	/* Inside auto layout */
-	flex: none;
-	order: 0;
-	flex-grow: 0;
-}
 </style>

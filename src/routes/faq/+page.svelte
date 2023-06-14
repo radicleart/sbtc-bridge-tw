@@ -39,19 +39,25 @@ let questions = [
     }
 ]
 </script>
-<div class="container">
-    <div class="frame14">
-        <div class="frame27">
-            <span class="pointer title" on:keydown on:click={() => toggleAll()}>Frequently Asked Questions</span>
+<div class="border border-gray-700 rounded-lg md:w-3/4 sm:w-5/6">
+    <div class="p-5">
+        <div class="mb-14 cursor-pointer flex text-2xl font-normal">
+            <h1 class="grow " on:keydown on:click={() => toggleAll()}>Frequently Asked Questions</h1>
+            <span class="" on:keydown on:click={() => toggleAll()}>
+            {#if componentKey % 2 === 0}
+                <ChevronDown />
+            {:else}
+                <ChevronUp />
+            {/if}
+            </span>
         </div>
         {#key componentKey}
         {#each questions as q, i}
-        <div class="frame3">
-            <div class="frame3-1">
-                <div class="pointer faq-question" on:keydown on:click={() => toggleAnswer(i)}>
-                    <span class="faq-question-title">{q.question}</span>
-                    <span class="faq-question-hanndle">
-                        {#if !q.hidden}
+            <div class="border-b border-b-gray-700 mb-10 pb-8">
+                <div class="cursor-pointer flex text-1xl font-normal " on:keydown on:click={() => toggleAnswer(i)}>
+                    <span class="grow">{q.question}</span>
+                    <span class="">
+                        {#if q.hidden}
                             <ChevronDown />
                         {:else}
                             <ChevronUp />
@@ -59,235 +65,10 @@ let questions = [
                     </span>
                 </div>
                 {#if !q.hidden}
-                <div id={'answer-' + i} class="faq-answer">{@html q.answer}</div>
+                <div id={'answer-' + i} class="text-sm font-light mt-6">{@html q.answer}</div>
                 {/if}
             </div>
-        </div>
         {/each}
         {/key}
     </div>
 </div>
-<style>
-.container {
-    /* Container */
-    /* Auto layout */
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    padding: 0px;
-    gap: 64px;
-    width: 100%;
-    height: auto;
-    /* Inside auto layout */
-    flex: none;
-    order: 0;
-    flex-grow: 0;
-}
-.frame14 {
-/* Frame 14 */
-
-
-    box-sizing: border-box;
-
-    /* Auto layout */
-
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 40px;
-    gap: 48px;
-
-    width: 100%;
-    height: auto;
-
-    /* Base/Gray/1000 */
-
-    background: #121212;
-    /* Base/Gray/800 */
-
-    border: 0.4px solid #535353;
-    border-radius: 24px;
-
-    /* Inside auto layout */
-
-    flex: none;
-    order: 0;
-    flex-grow: 1;
-}
-
-.frame27 {
-    /* Frame 27 */
-
-
-    /* Auto layout */
-
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 0px;
-    gap: 12px;
-
-    width: 100%;
-    height: 40px;
-
-
-    /* Inside auto layout */
-
-    flex: none;
-    order: 0;
-    align-self: stretch;
-    flex-grow: 0;
-}
-.frame3 {
-    /* Frame 3 */
-
-
-    /* Auto layout */
-
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 0px;
-    gap: 16px;
-
-    width: 100%;
-    height: auto;
-
-    /* Base/Gray/1000 */
-
-    background: #121212;
-    border-radius: 24px;
-
-    /* Inside auto layout */
-
-    flex: none;
-    order: 1;
-    align-self: stretch;
-    flex-grow: 0;
-}
-.title {
-    /* Frequently Asked Questions */
-
-
-    width: auto;
-    height: 40px;
-
-    /* 4xl/Medium */
-
-    font-family: 'Circular Std';
-    font-style: normal;
-    font-weight: 500;
-    font-size: 36px;
-    line-height: 40px;
-    /* identical to box height, or 111% */
-
-
-    color: #FFFFFF;
-
-
-    /* Inside auto layout */
-
-    flex: none;
-    order: 0;
-    flex-grow: 0;
-
-}
-
-.frame3-1 {
-    /* Frame 1 */
-
-
-    box-sizing: border-box;
-
-    /* Auto layout */
-
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 0px 0px 20px;
-    gap: 24px;
-
-    width: 100%;
-    height: auto;
-
-    /* Base/Gray/900 */
-
-    border-bottom: 1px solid #404040;
-
-    /* Inside auto layout */
-
-    flex: none;
-    order: 0;
-    align-self: stretch;
-    flex-grow: 0;
-}
-
-
-.faq-question {
-    /* Frame 28475 */
-
-
-    /* Auto layout */
-
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0px;
-    gap: 8px;
-
-    width: 100%;
-    height: 48px;
-
-
-    /* Inside auto layout */
-
-    flex: none;
-    order: 0;
-    align-self: stretch;
-    flex-grow: 0;
-}
-.faq-question-title {
-    /* What is the purpose of this bridge? */
-
-
-    width: auto;
-    height: 36px;
-
-    /* 3xl/Medium */
-
-    font-family: 'Circular Std';
-    font-style: normal;
-    font-weight: 500;
-    font-size: 30px;
-    line-height: 36px;
-    /* identical to box height, or 120% */
-
-
-    color: #FFFFFF;
-
-
-    /* Inside auto layout */
-
-    flex: none;
-    order: 0;
-    flex-grow: 0;
-}
-.faq-answer {
-    width: 682px;
-    height: auto;
-    /* xl/Light */
-    font-family: 'Circular Std';
-    font-style: normal;
-    font-weight: 300;
-    font-size: 20px;
-    line-height: 28px;
-    /* or 140% */
-    color: #FFFFFF;
-    /* Inside auto layout */
-    flex: none;
-    order: 1;
-    flex-grow: 0;
-}
-</style>

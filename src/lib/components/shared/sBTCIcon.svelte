@@ -1,5 +1,6 @@
-<div class="circle">
-    <svg width="25" height="25" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+<div class="w-14">
+    <div class="col-span-1 rounded-full w-9 h-9  pt-1 ps-2">
+    <svg width="35" height="35" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
         <g clip-path="url(#clip0_3395_8569)">
         <path d="M17.522 19.8626H2.48867C1.23429 19.8626 0.199707 18.8372 0.199707 17.5736V2.53115C0.199707 1.27677 1.22512 0.242188 2.48867 0.242188H17.5312C18.7855 0.242188 19.8201 1.2676 19.8201 2.53115V17.5736C19.811 18.828 18.7855 19.8626 17.522 19.8626Z" fill="black"/>
         <mask id="mask0_3395_8569" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="0" y="0" width="18" height="18">
@@ -143,16 +144,6 @@
         </clipPath>
         </defs>
         </svg>
-        
+    </div>
 </div>
-
-<style>
-.circle {
-    border-radius: 50%;
-    align-content: center;
-    text-align: center;
-
-}
-
-</style>
     

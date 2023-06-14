@@ -215,7 +215,7 @@ onMount(async () => {
 </script>
 
 {#if inited}
-<div class="frame14">
+<div class="flex flex-col gap-y-6 w-full border border-gray-700 rounded-lg items-center text-sm">
   <DepositFormHeader />
   {#if timeLineStatus === 1}
   {#key componentKey}
@@ -239,26 +239,5 @@ onMount(async () => {
 {/if}
 
 <style>
-.frame14 {
-  /* Frame 14 */
-  box-sizing: border-box;
-  /* Auto layout */
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  padding: 40px;
-  gap: 24px;
-  width: 680px;
-  height: auto;
-  /* Base/Gray/1000 */
-  background: #121212;
-  /* Secondary/Blue/400 */
-  border: 0.5px solid #b68f08;
-  border-radius: 24px;
-  /* Inside auto layout */
-  flex: none;
-  order: 1;
-  flex-grow: 0;
-}
 </style>
 
