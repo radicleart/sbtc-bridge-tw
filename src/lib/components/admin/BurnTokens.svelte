@@ -21,13 +21,13 @@ const burn = async () => {
     <div class="col">
       {#if error}<p class="text-danger">{error}</p>{/if}
       <label for="transact-path">Burn Address</label>
-      <input type="text" id="stxAddress" class="form-control" bind:value={stxAddress}/>
+      <input type="text" id="stxAddress" class="p-3 rounded-md border" bind:value={stxAddress}/>
       <label for="transact-path">Burn Amount</label>
-      <input type="number" id="pegInAmount" class="form-control" bind:value={pegOutAmount}/>
+      <input type="number" id="pegInAmount" class="p-3 rounded-md border" bind:value={pegOutAmount}/>
       <label for="transact-path">Bitcoin Tx Id</label>
-      <input type="text" id="btcTxid" class="form-control" bind:value={btcTxid}/>
+      <input type="text" id="btcTxid" class="p-3 rounded-md border" bind:value={btcTxid}/>
       <div class="py-0">
-        <Button darkScheme={true} label={'Burn Baby Burn'} target={''} on:clicked={() => burn()}/>
+        <Button darkScheme={false} label={'Burn Baby Burn'} target={''} on:clicked={() => burn()}/>
       </div>
     </div>
 </div>

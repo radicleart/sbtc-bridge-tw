@@ -4,6 +4,7 @@ import IntroFill from '$lib/components/shared/IntroFill.svelte';
 import { onMount } from 'svelte';
 
 const dispatch = createEventDispatcher();
+export let readonly:Boolean;
 
 export let inputData:{
   field: string;
@@ -36,14 +37,18 @@ onMount(async () => {
 </script>
 
 <div class="flex flex-col w-full items-center justify-center">
-  <div class="text-left w-full px-6 ">
+  <div class="text-left w-full">
     <div class="w-full flex justify-between">
       <span>{inputData.label}</span>
       <span class="pointer"><IntroFill/></span>
     </div>
+    {#if readonly}
+    <input id={inputData.field} readonly class="text-black tracking-wide font-extralight rounded-md p-3 h-12 w-full" type='text' bind:value={value} on:input={() => updater()}>
+    {:else}
     <input class="text-black tracking-wide font-extralight rounded-md p-3 h-12 w-full" type='text' bind:value={value} on:input={() => updater()}>
+    {/if}
   </div>
-  <div class="text-xs mt-3 text-left flex w-full items-center justify-between px-6">
+  <div class="text-xs mt-1 text-left flex w-full items-center justify-between">
     {#if reason}
     <div class=" text-error-500 grow">
       {reason}

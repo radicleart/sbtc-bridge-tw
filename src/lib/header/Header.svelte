@@ -14,6 +14,10 @@
 	const coordinator = isCoordinator(addresses().stxAddress)
 	const dispatch = createEventDispatcher();
 
+	const doLogin = async () => {
+		const res = await loginStacksJs(doLoginAfter);
+		console.log(res)
+	}
 	const doLogout = () => {
 		logUserOut();
 		sbtcConfig.update((conf:SbtcConfig) => {
@@ -26,9 +30,9 @@
 		goto('/')
 	}
 
-	const doLogin = async () => {
-		const res = await loginStacksJs(doLoginAfter);
-		console.log(res)
+	const getNavActiveClass = (item:string) => {
+		if (location.href.indexOf(item) > -1) return ' font-normal text-base text-warning-400 !px-4 !py-2 rounded-lg hover:bg-white/[8%] focus:bg-white/[16%]'
+		return 'font-normal text-base text-white !px-4 !py-2 rounded-lg hover:bg-white/[8%] focus:bg-white/[16%]'
 	}
 
 	const doLoginAfter = async (result:boolean) => {
@@ -38,16 +42,16 @@
 
 <Navbar
 	class="mx-auto flex max-w-7xl items-center !px-6 lg:px-8 !bg-transparent"
-	navDivClass="flex flex-wrap justify-between md:justify-start items-center flex-1" let:hidden let:toggle fluid={true}>
+	navDivClass="flex flex-nowrap justify-between md:justify-start items-center flex-1" let:hidden let:toggle fluid={true}>
   <NavBrand href="/">
-		<Brand />
+	<Brand />
   </NavBrand>
 
 	<div class="flex justify-between w-full md:w-auto mt-4 md:mt-0 md:order-2 gap-4">
-		<div class="flex gap-2 md:gap-5">
+		<div class="flex gap-2 md:gap-2">
 			<SettingsDropdown />
 			{#if $sbtcConfig.loggedIn}
-				<AccountDropdown />
+				<AccountDropdown on:init_logout={() => doLogout()}/>
 			{:else}
 				<button class="inline-flex items-center gap-x-1.5 bg-primary-01 px-4 py-2 font-normal text-black rounded-xl border border-primary-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-500/50" on:keydown on:click={doLogin}>
 					Connect wallet
@@ -71,12 +75,12 @@
 		class="order-1 md:flex-1"
 		ulClass="dark:bg-black dark:md:bg-transparent md:border-0 border border-black flex flex-col p-4 mt-4 md:flex-row md:mt-0 md:text-sm md:font-medium !md:space-x-4"
 	>
-    <NavLi nonActiveClass="font-normal text-base text-white !px-4 !py-2 rounded-lg hover:bg-white/[8%] focus:bg-white/[16%]" href="/deposit">Deposit</NavLi>
-    <NavLi nonActiveClass="font-normal text-base text-white !px-4 !py-2 rounded-lg hover:bg-white/[8%] focus:bg-white/[16%]" href="/withdraw">Withdraw</NavLi>
-    <NavLi nonActiveClass="font-normal text-base text-white !px-4 !py-2 rounded-lg hover:bg-white/[8%] focus:bg-white/[16%]" href="/transactions">History</NavLi>
-    <NavLi nonActiveClass="font-normal text-base text-white !px-4 !py-2 rounded-lg hover:bg-white/[8%] focus:bg-white/[16%]" href="/faq">FAQ</NavLi>
+    <NavLi nonActiveClass={getNavActiveClass('/deposit')} href="/deposit">Deposit</NavLi>
+    <NavLi nonActiveClass={getNavActiveClass('/withdraw')} href="/withdraw">Withdraw</NavLi>
+    <NavLi nonActiveClass={getNavActiveClass('/transactions')} href="/transactions">History</NavLi>
+    <NavLi nonActiveClass={getNavActiveClass('/faq')} href="/faq">FAQ</NavLi>
 		{#if coordinator}
-			<NavLi nonActiveClass="font-normal text-base text-white !px-4 !py-2 rounded-lg hover:bg-white/[8%] focus:bg-white/[16%]" href="/admin">Admin</NavLi>
+			<NavLi nonActiveClass={getNavActiveClass('/admin')} href="/admin">Admin</NavLi>
 		{/if}
   </NavUl>
 </Navbar>

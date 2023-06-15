@@ -4,8 +4,12 @@ import { hex } from '@scure/base';
 import type { PeginRequestI } from 'sbtc-bridge-lib' 
 import { fetchUtxoSet, fetchCurrentFeeRates } from "../bridge_api";
 import { decodeStacksAddress, addresses } from '$lib/stacks_connect'
-import { toStorable, buildDepositPayload, approxTxFees } from 'sbtc-bridge-lib' 
+import { toStorable, buildDepositPayload, approxTxFees, MAGIC_BYTES_TESTNET, MAGIC_BYTES_MAINNET, PEGIN_OPCODE } from 'sbtc-bridge-lib' 
 import type { PegInData, CommitKeysI } from 'sbtc-bridge-lib' 
+import * as P from 'micro-packed';
+import { c32addressDecode } from 'c32check';
+
+const concat = P.concatBytes;
 
 export interface PegInTransactionI {
 	unconfirmedUtxos:boolean;
@@ -152,9 +156,28 @@ export default class PegInTransaction implements PegInTransactionI {
 	 * magic bytes not needed in commit tx.
 	 */
 	buildData = (sigOrPrin:string, opDrop:boolean):Uint8Array => {
-		return buildDepositPayload(this.net, this.pegInData.revealFee || this.fee, sigOrPrin, opDrop, undefined);
+		if (opDrop) {
+			return buildDepositPayload(this.net, this.pegInData.revealFee || this.fee, sigOrPrin, opDrop, undefined);
+		}
+		return this.buildDepositPayload(this.net, sigOrPrin);
 	}
 
+	buildDepositPayload(net:any, address:string):Uint8Array {
+		const magicBuf = (typeof net === 'object' && net.bech32 === 'tb') ? hex.decode(MAGIC_BYTES_TESTNET) : hex.decode(MAGIC_BYTES_MAINNET);
+		const opCodeBuf = hex.decode(PEGIN_OPCODE);
+		const addr = c32addressDecode(address.split('.')[0])
+		const addr0Buf = hex.decode(addr[0].toString(16));
+		const addr1Buf = hex.decode(addr[1]);
+	
+		let buf1 = concat(opCodeBuf, addr0Buf, addr1Buf);
+		if (address.indexOf('.') > -1) {
+			const cnameBuf = new TextEncoder().encode(address.split('.')[1]);
+			buf1 = concat(buf1, cnameBuf);
+		}
+				
+		return concat(magicBuf, buf1)
+	}
+	
 	getChange = () => {
 		return this.maxCommit() - this.pegInData.amount - this.fee;
 	};
@@ -213,7 +236,7 @@ export default class PegInTransaction implements PegInTransactionI {
 			mode: 'op_drop',
 			amount: this.pegInData.amount,
 			wallet: 'btc.p2tr(reclaimAddr.pubkey, { script: Script.encode([data, \'DROP\', sbtcWalletAddr.pubkey]) }, this.net, true)',
-			requestType: 'wrap',
+			requestType: 'deposit',
 			originator: this.pegInData.stacksAddress,
 			stacksAddress: this.pegInData.stacksAddress,
 			sbtcWalletAddress: this.pegInData.sbtcWalletAddress,

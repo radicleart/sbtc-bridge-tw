@@ -35,29 +35,29 @@ onMount(async () => {
 </script>
 
 <div class="flex flex-col w-full items-center justify-center">
-  <div class="p-6 w-full">
-  <div class="text-left">
-    <div class="w-full flex justify-between">
-      <span>{inputData.label}</span>
-      <span class="pointer"><IntroFill/></span>
-    </div>
-    <input type='number' class="text-black tracking-wide font-extralight rounded-md p-3 h-12 w-full" bind:value={value} on:input={() => updater()}>
-  </div>
-  <div class="text-xs mt-3 text-left flex items-center justify-between">
-    {#if reason}
-      <div class="text-xs text-error-500 grow">{reason}</div>
-      {:else if inputData.hint}
-      <div class="grid grid-cols-6">
-        <div class="text-hint col-span-5">
-          {inputData.hint}
-        </div>
-        {#if inputData.resetValue}
-        <div class="col-span-1 text-hint text-gray-500">
-          <a href="/" on:click|preventDefault={() => reset()}>reset</a>
-        </div>
-        {/if}
+  <div class="w-full">
+    <div class="text-left">
+      <div class="w-full flex justify-between">
+        <span>{inputData.label}</span>
+        <span class="pointer"><IntroFill/></span>
       </div>
-    {/if}
+      <input id={inputData.field} type='number' class="text-black tracking-wide font-extralight rounded-md p-3 h-12 w-full" bind:value={value} on:input={() => updater()}>
+    </div>
+    <div class="text-xs mt-1 text-left flex items-center justify-between">
+      {#if reason}
+        <div class="text-xs text-error-500 grow">{reason}</div>
+        {:else if inputData.hint}
+        <div class="grid grid-cols-6">
+          <div class="text-hint col-span-5">
+            {inputData.hint}
+          </div>
+          {#if inputData.resetValue}
+          <div class="col-span-1 text-hint text-gray-500">
+            <a href="/" on:click|preventDefault={() => reset()}>reset</a>
+          </div>
+          {/if}
+        </div>
+      {/if}
+    </div>
   </div>
-</div>
 </div>

@@ -31,18 +31,18 @@ const wallet = async () => {
   <div class="row">
     <div class="col">
       <div>Coordinator: {coordinator}</div>
-      <input type="text" id="stxAddress" class="form-control" bind:value={coordinator}/>
+      <input type="text" id="stxAddress" class="p-3 rounded-md border" bind:value={coordinator}/>
       <div class="py-0">
-        <Button darkScheme={true} label={'Set Coordinator'} target={''} on:clicked={() => coordinate()}/>
+        <Button darkScheme={false} label={'Set Coordinator'} target={''} on:clicked={() => coordinate()}/>
       </div>
     </div>
   </div>
   <div class="row">
     <div class="col">
       <div>sBTC Wallet: {$sbtcConfig.sbtcContractData.sbtcWalletAddress}</div>
-      <input type="text" id="sbtcWallet" class="form-control" bind:value={sbtcWallet}/>
+      <input type="text" id="sbtcWallet" class="p-3 rounded-md border" bind:value={sbtcWallet}/>
       <div class="py-0">
-        <Button darkScheme={true} label={'Set BTC Wallet'} target={''} on:clicked={() => wallet()}/>
+        <Button darkScheme={false} label={'Set BTC Wallet'} target={''} on:clicked={() => wallet()}/>
       </div>
     </div>
   </div>

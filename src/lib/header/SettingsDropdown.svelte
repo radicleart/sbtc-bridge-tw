@@ -91,7 +91,7 @@
 	ulClass="py-1 w-full"
 	placement='bottom-end'
 >
-	<div slot="header" class="bg-gray-1000 overflow-hidden py-1">
+	<div slot="header" class="bg-gray-1000 overflow-hidden py-1 text-white">
 		<div class="px-4 py-2 bg-gray-1000 grid grid-cols-2 gap-2">
 			<p class="text-sm text-white font-normal">
 				Network:
@@ -112,13 +112,9 @@
 				<span class="text-sm inline-block font-extralight text-gray-100">{getAddress(false)}</span>
 			</p>
 			<div class="ml-auto flex items-center">
-				<a href={explorerBtcAddressUrl(getAddress(true))} target="_blank" class="h-8 w-8 rounded-md bg-black flex items-center justify-center border border-transparent hover:border-gray-900 transition duration-200">
+				<a title="show in explorer" href={explorerBtcAddressUrl(getAddress(true))} target="_blank" class="h-8 w-8 rounded-md bg-black flex items-center justify-center border border-transparent hover:border-gray-900 transition duration-200">
 					<Icon src="{ArrowUpRight}" mini class="-mr-0.5 h-5 w-5 text-white" aria-hidden="true" />
 				</a>
-				<!--<button class="h-8 w-8 rounded-md bg-black flex items-center justify-center border border-transparent hover:border-gray-900 transition duration-200">
-					<Icon src="{ClipboardDocument}" class="-mr-0.5 h-5 w-5 text-white" aria-hidden="true" />
-				</button>
-				-->
 			</div>
 		</div>
 		<div class="px-4 py-2 bg-gray-1000 grid grid-cols-2 gap-2 items-center">
@@ -127,7 +123,7 @@
 				<span class="text-sm inline-block font-extralight text-gray-100">{getContractAddress()}</span>
 			</p>
 			<div class="ml-auto flex items-center">
-				<a href={explorerAddressUrl(CONFIG.VITE_SBTC_CONTRACT_ID)} target="_blank" class="h-8 w-8 rounded-md bg-black flex items-center justify-center border border-transparent hover:border-gray-900 transition duration-200">
+				<a title="show in explorer" href={explorerAddressUrl(CONFIG.VITE_SBTC_CONTRACT_ID)} target="_blank" class="h-8 w-8 rounded-md bg-black flex items-center justify-center border border-transparent hover:border-gray-900 transition duration-200">
 					<Icon src="{ArrowUpRight}" mini class="-mr-0.5 h-5 w-5 text-white" aria-hidden="true" />
 				</a>
 			</div>
@@ -138,7 +134,7 @@
 				<span class="text-sm inline-block font-extralight text-gray-100">{getOwner(false)}</span>
 			</p>
 			<div class="ml-auto flex items-center">
-				<a href={explorerAddressUrl(getOwner(true))} target="_blank" class="h-8 w-8 rounded-md bg-black flex items-center justify-center border border-transparent hover:border-gray-900 transition duration-200">
+				<a title="show in explorer" href={explorerAddressUrl(getOwner(true))} target="_blank" class="h-8 w-8 rounded-md bg-black flex items-center justify-center border border-transparent hover:border-gray-900 transition duration-200">
 					<Icon src="{ArrowUpRight}" mini class="-mr-0.5 h-5 w-5 text-white" aria-hidden="true" />
 				</a>
 			</div>
@@ -149,20 +145,20 @@
 				<span class="text-sm inline-block font-extralight text-gray-100">{getCoordinator(false)}</span>
 			</p>
 			<div class="ml-auto flex items-center">
-				<a href={explorerAddressUrl(getOwner(true))} target="_blank" class="h-8 w-8 rounded-md bg-black flex items-center justify-center border border-transparent hover:border-gray-900 transition duration-200">
+				<a title="show in explorer" href={explorerAddressUrl(getOwner(true))} target="_blank" class="h-8 w-8 rounded-md bg-black flex items-center justify-center border border-transparent hover:border-gray-900 transition duration-200">
 					<Icon src="{ArrowUpRight}" mini class="-mr-0.5 h-5 w-5 text-white" aria-hidden="true" />
 				</a>
 			</div>
 		</div>
   </div>
 	<DropdownItem defaultClass="hover:bg-black">
-		<li class="px-4 py-2 hover:bg-gray-900">
-			<Toggle checked on:click={() => toggleSettings('txmode')}>Transaction mode</Toggle>
-			<Helper class="pl-14 !font-extralight">{#if $sbtcConfig.userSettings?.useOpDrop}Using OP_DROP Mechanism{:else}Using OP_RETURN Mechanism{/if}</Helper>
+		<li class="px-4 py-2 hover:bg-gray-900 text-white">
+			<Toggle class=" text-white" checked={$sbtcConfig.userSettings?.useOpDrop} on:click={() => toggleSettings('txmode')}>Transaction mode</Toggle>
+			<Helper helperClass="pl-14 !font-extralight text-white">{#if $sbtcConfig.userSettings?.useOpDrop}Using OP_DROP Mechanism{:else}Using OP_RETURN Mechanism{/if}</Helper>
 		</li>
 		<li class="px-4 py-2 hover:bg-gray-900">
-			<Toggle on:click={() => toggleSettings('debug')}>Debug mode</Toggle>
-			<Helper class="pl-14 !font-extralight">{#if $sbtcConfig.userSettings?.debugMode}Show advanced info{:else}Hide advanced info{/if}</Helper>
+			<Toggle class=" text-white" checked={$sbtcConfig.userSettings?.debugMode} on:click={() => toggleSettings('debug')} >Debug mode</Toggle>
+			<Helper helperClass="pl-14 !font-extralight text-white">{#if $sbtcConfig.userSettings?.debugMode}Show advanced info{:else}Hide advanced info{/if}</Helper>
 		</li>
 	</DropdownItem>
 </Dropdown>

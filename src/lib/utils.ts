@@ -5,6 +5,8 @@ import type { AddressMempoolObject } from 'sbtc-bridge-lib'
 import type { PeginRequestI } from 'sbtc-bridge-lib' 
 
 export const COMMS_ERROR = 'Error communicating with the server. Please try later.'
+export const smbp = 900
+export const xsbp = 700
 
 const formatter = new Intl.NumberFormat('en-US', {
   style: 'currency',

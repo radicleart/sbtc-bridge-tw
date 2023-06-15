@@ -54,6 +54,13 @@ export async function fetchSbtcBalance () {
 	let result:AddressObject;
 	try {
 		result = await fetchUserBalances(adrds);
+		try {
+			result.sBTCBalance = Number(result.stacksTokenInfo?.fungible_tokens[CONFIG.VITE_SBTC_CONTRACT_ID + '::sbtc'].balance)
+		} catch (err) {
+			// for testing..
+			try { result.sBTCBalance = Number(result.stacksTokenInfo?.fungible_tokens['ST3N4AJFZZYC4BK99H53XP8KDGXFGQ2PRSPNET8TN.sky-blue-elephant::sbtc'].balance) }
+			catch (err) { result.sBTCBalance = 0 }
+		}
 
 	} catch(err) {
 		result = adrds;
@@ -217,7 +224,14 @@ export function verifyAmount(amount:number) {
   	if (amount < 10000) {
 		throw new Error('Amount less than mnimum transaction fee.');
 	  }
-  }
-  
+}
+export function verifySBTCAmount(amount:number, balance:number, fee:number) {
+	if (!amount || amount === 0) {
+		throw new Error('No amount entered');
+	}
+	if (amount > (balance - fee)) {
+		throw new Error('No more then balance (less fee of ' + fee + ')');
+	}
+}
   
 	

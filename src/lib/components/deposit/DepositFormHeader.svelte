@@ -7,14 +7,11 @@ onMount(async () => {
 
 </script>
 
-<div class="flex w-full py-4 mt-5  align-baseline items-center">
-  <div class="ps-6 grow">
+<div class="flex w-full mt-5  gap-y-4 align-baseline items-center flex-wrap">
+  <div class="grow">
     <span class="text-2xl font-medium">Deposit BTC</span>
   </div>
-  <div class="">
-    <SwitchGraphic />
+  <div class="grow">
+    <SwitchGraphic reverse={false}/>
   </div>
 </div>
-<style>
-
-</style>

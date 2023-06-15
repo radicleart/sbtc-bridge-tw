@@ -5,6 +5,7 @@ import type { PeginRequestI, SbtcContractDataI, AddressObject, KeySet } from 'sb
 export type SbtcConfig = {
   sbtcWalletAddressInfo?: any;
   pegInMongoId?: string;
+  pegOutMongoId?: string;
   btcFeeRates?: any;
   loggedIn: boolean;
   pegInTransaction?:PegInTransactionI;
@@ -17,6 +18,7 @@ export type SbtcConfig = {
   userSettings:SbtcUserSettingI;
   sbtcContractData: SbtcContractDataI;
   keys: KeySet;
+  innerWidth:number;
 };
 
 export type SbtcUserSettingI = {

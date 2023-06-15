@@ -43,26 +43,32 @@ onMount(async () => {
 })
 
 </script>
-<div class="w-4/5 lg:w-3/5">
-	{#if inited}
-    <div class="flex flex-col gap-y-10">
-		{#if $sbtcConfig.userSettings?.useOpDrop}
-		{#key componentKey}
-		<TimeLine {timeLineStatus}/>
-		{/key}
-		<DepositForm on:time_line_status_change={timeLineUpdate}/>
-		{:else}
-		{#key componentKey}
-		<TimeLineOpReturn {timeLineStatus}/>
-		{/key}
-		<DepositFormOpReturn on:time_line_status_change={timeLineUpdate}/>
+<!-- 180 or the header get overlapped -->
+{#if errored}
+<ServerError />
+{:else}
+<div class="mx-auto h-[calc(100vh-180px)] flex flex-col justify-center">
+	<div class="mx-auto max-w-3xl">
+		{#if inited}
+		<div class="flex flex-col p-10 gap-10 items-start bg-gray-1000 xs:w-4/5">
+			{#if $sbtcConfig.userSettings?.useOpDrop}
+			{#key componentKey}
+			<TimeLine {timeLineStatus}/>
+			{/key}
+			<DepositForm on:time_line_status_change={timeLineUpdate}/>
+			{:else}
+			{#key componentKey}
+			<TimeLineOpReturn {timeLineStatus}/>
+			{/key}
+			<DepositFormOpReturn on:time_line_status_change={timeLineUpdate}/>
+			{/if}
+
+		</div>
+		{:else if errored}
+		<div class="flex flex-col p-10 gap-10 items-start bg-gray-1000 border-[0.5px] border-gray-700 rounded-3xl">
+			<ServerError />
+		</div>
 		{/if}
-
 	</div>
-	{:else if errored}
-		<ServerError />
-	{/if}
 </div>
-
-<style>
-</style>
+{/if}
