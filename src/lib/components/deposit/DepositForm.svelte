@@ -91,9 +91,14 @@ const doClicked = async (event:any) => {
   const button = event.detail;
   if (button.target === 'openInvoice') {
     try {
-      verifyAmount(piTx.pegInData.amount);
+      verifyAmount(input2Data.value);
+      piTx.pegInData.amount = input2Data.value;
       //stopTxWatcher()
-      savePeginRequestToDB();
+      const conf:SbtcConfig = $sbtcConfig;
+      conf.pegInTransaction = piTx;
+      sbtcConfig.update(() => conf);
+      peginRequest = piTx.getOpDropPeginRequest();
+      savePeginRequestToDB(peginRequest);
       timeLineStatus = 2;
       dispatch('time_line_status_change', { timeLineStatus });
     } catch(err:any) {
@@ -131,7 +136,7 @@ const doClicked = async (event:any) => {
   //updateConfig();
 }
 
-const savePeginRequestToDB = async () => {
+const savePeginRequestToDB = async (peginRequest) => {
   try {
     const newPegin = await savePeginCommit(peginRequest)
     if (!newPegin) throw new Error('Unable to save - already exists');
@@ -201,7 +206,7 @@ const initComponent = async () => {
     peginRequest = piTx.getOpDropPeginRequest();
   } catch (err) {
     piTx.commitKeys = commitAddresses(); // make sure the addresses are all hex encoded and serialisation safe.
-    peginRequest = piTx.getOpDropPeginRequest();
+    throw new Error('Unexpected error')
   }
   peginRequest.originator = addresses().stxAddress; // retain the sender in case the address in UI changes.
   
