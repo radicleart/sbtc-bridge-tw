@@ -12,13 +12,6 @@ let pegAmount:number = piTx.pegInData.amount;
 const changeFee = (maxValue:boolean) => {
   errorReason = undefined;
   try {
-    //if (amtData.maxCommit > 0 && pegAmount > amtData.maxCommit) {
-      //errorReason = 'Can\'t wrap more btc than available.';
-      //return;
-    //}
-    //if (maxValue) {
-    //  pegAmount = amtData.maxCommit - amtData.fee;
-    //}
     const rate = piTx.fees.find((o) => o === piTx.fee);
     dispatch('amount_updated', { opCode:'user', error: false, newAmount: pegAmount, newFeeRate: rate });
   } catch(err:any) {

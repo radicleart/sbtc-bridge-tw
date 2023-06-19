@@ -25,7 +25,7 @@ const updateTransaction = () => {
 
   <div class="row">
     <div class="col-4">Request</div>
-    <div class="col-8">{#if $sbtcConfig.pegIn}Wrap{:else}Unwrap{/if} Bitcoin</div>
+    <div class="col-8">{#if $sbtcConfig.pegIn}Deposit{:else}Withdraw{/if} Bitcoin</div>
   </div>
   <div class="row">
     <div class="col-4">From</div>

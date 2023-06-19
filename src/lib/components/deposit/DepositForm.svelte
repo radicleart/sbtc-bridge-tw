@@ -16,7 +16,6 @@ import ScriptHashAddress from '$lib/components/deposit/ScriptHashAddress.svelte'
 import { makeFlash } from "$lib/stacks_connect";
 import { fetchPeginById, savePeginCommit, fetchPeginsByStacksAddress, doPeginScan } from "$lib/bridge_api";
 import StatusCheck from "$lib/components/deposit/StatusCheck.svelte";
-import ServerError from "$lib/components/common/ServerError.svelte";
 import Button from '$lib/components/shared/Button.svelte';
 
 const dispatch = createEventDispatcher();
@@ -94,6 +93,7 @@ const doClicked = async (event:any) => {
     try {
       verifyAmount(piTx.pegInData.amount);
       //stopTxWatcher()
+      savePeginRequestToDB();
       timeLineStatus = 2;
       dispatch('time_line_status_change', { timeLineStatus });
     } catch(err:any) {
@@ -115,12 +115,42 @@ const doClicked = async (event:any) => {
   } else if (button.target === 'status-check') {
     //await doPeginScan();
     if ($sbtcConfig.pegInMongoId) pegin = await fetchPeginById($sbtcConfig.pegInMongoId);
-    timeLineStatus = 3;
-    dispatch('time_line_status_change', { timeLineStatus });
+    if (!pegin || pegin.status > 1) {
+      const conf:SbtcConfig = $sbtcConfig;
+      conf.pegInMongoId = undefined;
+      sbtcConfig.update(() => conf);
+      timeLineStatus = 1;
+      dispatch('time_line_status_change', { timeLineStatus });
+    } else {
+      goto('/transactions/' + pegin._id);
+      return
+    }
   } else if (button.target === 'transaction-history') {
 		goto('/transactions')
   }
   //updateConfig();
+}
+
+const savePeginRequestToDB = async () => {
+  try {
+    const newPegin = await savePeginCommit(peginRequest)
+    if (!newPegin) throw new Error('Unable to save - already exists');
+    if (newPegin.insertedId) {
+      pegin = peginRequest;
+      pegin._id = newPegin.insertedId;
+    } else {
+      pegin = newPegin;
+    }
+  } catch(err) {
+    const pegins = await fetchPeginsByStacksAddress(peginRequest.originator);
+    if (!pegins || pegins.length === 0) throw new Error('Pegin requestion is both found and not found');
+    const peginList = pegins.find((p) => p.amount === peginRequest.amount)
+    if (peginList) {
+      pegin = peginList;
+    } else {
+      throw new Error('Pegin requestion is both found and not found');
+    }
+  }
 }
 
 const commitAddresses = ():CommitKeysI => {
@@ -158,7 +188,7 @@ const initComponent = async () => {
     if ($sbtcConfig.pegInTransaction) {
       piTx = PegInTransaction.hydrate($sbtcConfig.pegInTransaction);
     } else {
-      piTx = await PegInTransaction.create(network, commitAddresses());
+      piTx = await PegInTransaction.create(network, commitAddresses(), $sbtcConfig.btcFeeRates);
     }
   }
   if (!piTx.pegInData) piTx.pegInData = {} as PegInData;
@@ -178,39 +208,18 @@ const initComponent = async () => {
   const conf:SbtcConfig = $sbtcConfig;
   if ($sbtcConfig.pegInMongoId) {
     pegin = await fetchPeginById($sbtcConfig.pegInMongoId);
-    if (!pegin) {
+    if (!pegin || pegin.status > 1) {
       conf.pegInMongoId = undefined;
       sbtcConfig.update(() => conf);
-      console.log('Unable to fetch - not found');
-      location.reload();
-    }
-    if (pegin.status === 1) {
-      timeLineStatus = 2;
-    } else if (pegin.status === 2) {
-      timeLineStatus = 3;
-    }
-  } else {
-    //if (peginRequest && peginRequest.commitTxScript && peginRequest.commitTxScript.script && peginRequest.commitTxScript.script.length > 0) 
-    try {
-      const newPegin = await savePeginCommit(peginRequest)
-      if (!newPegin) throw new Error('Unable to save - already exists');
-      if (newPegin.insertedId) {
-        pegin = peginRequest;
-        pegin._id = newPegin.insertedId;
-      } else {
-        pegin = newPegin;
-      }     
-    } catch(err) {
-      const pegins = await fetchPeginsByStacksAddress(peginRequest.originator);
-      if (!pegins || pegins.length === 0) throw new Error('Pegin requestion is both found and not found');
-      const peginList = pegins.find((p) => p.amount === peginRequest.amount)
-      if (peginList) {
-        pegin = peginList;
-      } else {
-        throw new Error('Pegin requestion is both found and not found');
-      }
+    } else if (pegin.amount === 0) {
+      timeLineStatus = 1;
+    } else {
+      goto('/transactions/' + pegin._id);
+      return
     }
   }
+   //if (peginRequest && peginRequest.commitTxScript && peginRequest.commitTxScript.script && peginRequest.commitTxScript.script.length > 0) 
+
   dispatch('time_line_status_change', { timeLineStatus });
   conf.pegInMongoId = pegin._id
   conf.pegInTransaction = piTx;

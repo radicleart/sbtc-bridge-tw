@@ -2,7 +2,7 @@ import { CONFIG } from '$lib/config';
 import * as btc from '@scure/btc-signer';
 import { hex } from '@scure/base';
 import type { PeginRequestI } from 'sbtc-bridge-lib' 
-import { fetchUtxoSet, fetchCurrentFeeRates } from "../bridge_api";
+import { fetchUtxoSet } from "../bridge_api";
 import { decodeStacksAddress, addresses } from '$lib/stacks_connect'
 import { toStorable, buildDepositPayload, approxTxFees, MAGIC_BYTES_TESTNET, MAGIC_BYTES_MAINNET, PEGIN_OPCODE } from 'sbtc-bridge-lib' 
 import type { PegInData, CommitKeysI } from 'sbtc-bridge-lib' 
@@ -77,7 +77,7 @@ export default class PegInTransaction implements PegInTransactionI {
 	 * @param stacksAddress 
 	 * @returns PegInTransaction object
 	 */
-	public static create = async (network:string, commitKeys:CommitKeysI ):Promise<PegInTransactionI> => {
+	public static create = async (network:string, commitKeys:CommitKeysI, btcFeeRates:any):Promise<PegInTransactionI> => {
 		const me = new PegInTransaction();
 		me.net = (network === 'testnet') ? btc.TEST_NETWORK : btc.NETWORK;
 		if (commitKeys.fromBtcAddress && commitKeys.fromBtcAddress.length > 0) {
@@ -94,7 +94,6 @@ export default class PegInTransaction implements PegInTransactionI {
 		me.addressInfo = await fetchUtxoSet(commitKeys.fromBtcAddress);
 		console.log('CONFIG.VITE_NETWORK:' + CONFIG.VITE_NETWORK)
 		console.log('addressInfo:', me.addressInfo)
-		const btcFeeRates = await fetchCurrentFeeRates();
 		me.feeInfo = btcFeeRates.feeInfo;
 		me.ready = true;
 		return me;
@@ -222,7 +221,6 @@ export default class PegInTransaction implements PegInTransactionI {
 	getOpDropPeginRequest2 = ():PeginRequestI => {
 		if (!this.pegInData.stacksAddress) this.pegInData.stacksAddress = addresses().stxAddress
 		const data = this.buildData(this.pegInData.stacksAddress, true);
-
 		const sbtcWalletAddrScript = btc.Address(this.net).decode(this.pegInData.sbtcWalletAddress)
 		if (sbtcWalletAddrScript.type !== 'tr') throw new Error('Taproot required')
 		const reclaimAddr = btc.Address(this.net).decode(this.fromBtcAddress)
@@ -258,7 +256,6 @@ export default class PegInTransaction implements PegInTransactionI {
 	 */
 	getOpDropPeginRequest = ():PeginRequestI => {
 		if (!this.pegInData.stacksAddress) this.pegInData.stacksAddress = addresses().stxAddress
-		const data = this.buildData(this.pegInData.stacksAddress, true);
 
 		//const sbtcWalletAddrScript = btc.Address(this.net).decode(this.pegInData.sbtcWalletAddress)
 		//if (sbtcWalletAddrScript.type !== 'tr') throw new Error('Taproot required')
@@ -271,6 +268,7 @@ export default class PegInTransaction implements PegInTransactionI {
 		console.log('reclaimAddr.pubkey: ' + this.commitKeys.reclaimPub)
 		console.log('revealAddr.pubkey: ' + this.commitKeys.revealPub)
 		
+		const data = this.buildData(this.pegInData.stacksAddress, true);
 		const scripts =  [
 			{ script: btc.Script.encode([data, 'DROP', hex.decode(this.commitKeys.revealPub), 'CHECKSIG']) },
 			{ script: btc.Script.encode([hex.decode(this.commitKeys.reclaimPub), 'CHECKSIG']) }

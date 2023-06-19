@@ -39,7 +39,7 @@ let questions = [
     }
 ]
 </script>
-<div class="border border-gray-700 rounded-lg md:w-3/4 sm:w-5/6">
+<div class="border border-gray-700 rounded-lg md:w-3/4 sm:w-5/6 my-20">
     <div class="p-5">
         <div class="mb-14 cursor-pointer flex text-2xl font-normal">
             <h1 class="grow " on:keydown on:click={() => toggleAll()}>Frequently Asked Questions</h1>

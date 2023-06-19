@@ -6,7 +6,7 @@ import type { SigData } from 'sbtc-bridge-lib'
 import { openPsbtRequestPopup } from '@stacks/connect'
 import * as btc from '@scure/btc-signer';
 import { hexToBytes } from "@stacks/common";
-import { sendRawTxDirectMempool } from '$lib/bridge_api';
+import { sendRawTxDirectBlockCypher } from '$lib/bridge_api';
 import { sbtcConfig } from '$stores/stores';
 import { truncate, explorerBtcAddressUrl, fmtSatoshiToBitcoin, convertOutputsBlockCypher } from "$lib/utils";
 import type { PegInTransactionI } from '$lib/domain/PegInTransaction';
@@ -14,19 +14,19 @@ import type { PegOutTransactionI } from '$lib/domain/PegOutTransaction';
 import { savePeginCommit } from '$lib/bridge_api';
 import Button from '$lib/components/shared/Button.svelte';
 import type { PeginRequestI } from 'sbtc-bridge-lib' 
-import ArrowUpRight from '$lib/components/shared/ArrowUpRight.svelte';
-import FileIcon from '$lib/components/shared/FileIcon.svelte';
 import CopyClipboard from '$lib/components/common/CopyClipboard.svelte';
 import { makeFlash } from "$lib/stacks_connect";
+import Invoice from '../Invoice.svelte';
 
 export let piTx: PegInTransactionI|PegOutTransactionI;
+export let peginRequest:PeginRequestI;
 
 const dispatch = createEventDispatcher();
 let sigData:SigData;
 let currentTx:string;
 let errorReason: string|undefined;
 let cypherResp: any|undefined;
-let peginRequest:PeginRequestI;
+let inited = false;
 
 const getExplorerUrl = () => {
   return explorerBtcAddressUrl(piTx.pegInData.sbtcWalletAddress)
@@ -54,8 +54,8 @@ export async function requestSignPsbt() {
   openPsbtRequestPopup({
     hex: currentTx,
     appDetails: {
-      name: 'My App',
-      icon: window.location.origin + '/my-app-logo.svg',
+      name: 'sBTC Bridge',
+      icon: window.location.origin + '/img/icon_sbtc.png',
     },
     onFinish(data:any) {
       broadcastTransaction(data.hex);
@@ -87,22 +87,20 @@ const broadcastTransaction = async (psbtHex:string) => {
     const txHex = hex.encode(tx.toBytes(true, tx.hasWitnesses));
     currentTx = txHex;
     errorReason = undefined;
-    resp = await sendRawTxDirectMempool(txHex);
-    console.log('sendRawTxDirectMempool: ', resp);
+    resp = await sendRawTxDirectBlockCypher(txHex);
+    console.log('sendRawTxDirectBlockCypher: ', resp);
     if (resp && resp.tx) {
       broadcasted = true;
       try {
-        if ($sbtcConfig.userSettings.useOpDrop) {
-          const peginRequest:PeginRequestI = piTx.getOpDropPeginRequest()
-          await savePeginCommit(peginRequest)
-        } else {
-          const peginRequest:PeginRequestI = piTx.getOpReturnPeginRequest()
+        if (!$sbtcConfig.userSettings.useOpDrop) {
+          //peginRequest = piTx.getOpDropPeginRequest()
+          //const peginRequest:PeginRequestI = piTx.getOpReturnPeginRequest()
           peginRequest.status = 5;
           peginRequest.btcTxid = (resp.tx.hash) ? resp.tx.hash : resp.tx.txid;
           convertOutputsBlockCypher(resp.tx, peginRequest)
-          await savePeginCommit(peginRequest);
           cypherResp = resp;
         }
+        await savePeginCommit(peginRequest);
       } catch (err) {
         console.log('Error saving pegin request', err)
         // duplicate.. ok to ignore
@@ -125,7 +123,6 @@ onMount(async () => {
 		outputsForDisplay: piTx?.getOutputsForDisplay(),
 		inputsForDisplay: piTx?.addressInfo.utxos
 	}
-  peginRequest = piTx.getOpDropPeginRequest();
   if ($sbtcConfig.userSettings.useOpDrop) {
     //testSignReveal(opDrop);
     const tx = piTx?.buildOpDropTransaction();
@@ -134,32 +131,19 @@ onMount(async () => {
   } else {
     currentTx = hex.encode(piTx?.buildOpReturnTransaction().toPSBT());
   }
+  inited = true;
 })
 </script>
 <div id="clipboard"></div>
 
+{#if inited}
 <div class="flex w-full flex-wrap align-baseline items-start px-5">
   <div class="">
     {#if !broadcasted}
     <p class="text-lg">Sign and broadcast your transaction.</p>
     {/if}
   </div>
-  <div class="qr-frame p-3  flex flex-col md:flex-row gap-y-8 w-full">
-    <div class="grow flex flex-col gap-4 mb-5">
-      <div class="flex align-baseline text-gray-300 p-1 bg-black-01 rounded-md border border-gray-700">
-          <div id="address-field" class="grow ml-auto flex items-center">{getAddress(12)}</div>
-          <ArrowUpRight class="-mr-0.5 h-5 w-5 text-white" target={explorerBtcAddressUrl(piTx.pegInData.sbtcWalletAddress)} />
-          <FileIcon on:clicked={() => copy('address-field', piTx.pegInData.sbtcWalletAddress)} class={'-mr-0.5 h-5 w-5 text-white'}/>
-      </div>
-      <div class="flex text-gray-300 text-2xl">
-        <div id="amount-field" class="grow ">{fmtSatoshiToBitcoin(piTx.pegInData.amount)}</div>
-        <FileIcon on:clicked={() => copy('amount-field', '' + piTx.pegInData.amount)} class={'-mr-0.5 h-5 w-5 text-white'}/>
-      </div>
-      <div class="flex text-gray-300 text-2xl">
-        <div class="grow ">BITCOIN</div>
-      </div>
-    </div>
-  </div>
+  <Invoice {peginRequest} />
   {#if !broadcasted && !errorReason}
   <div class="mt-8 flex">
     <Button darkScheme={false} label={'Make changes'} target={'back'} on:clicked={() => updateTransaction()}/>
@@ -182,4 +166,4 @@ onMount(async () => {
   {/if}
 
 </div>
-
+{/if}

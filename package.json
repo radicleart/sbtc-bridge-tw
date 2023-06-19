@@ -34,6 +34,7 @@
 		"svelte": "^3.54.0",
 		"svelte-check": "^3.0.1",
 		"svelte-hero-icons": "^5.0.0",
+		"svelte-heros-v2": "^0.7.3",
 		"svelte-preprocess": "^5.0.3",
 		"tailwindcss": "^3.3.1",
 		"tslib": "^2.4.1",
@@ -44,6 +45,7 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"@noble/secp256k1": "^2.0.0",
 		"@popperjs/core": "^2.11.8",
 		"@stacks/connect": "^7.3.1",
 		"@stacks/network": "^6.5.4",
@@ -52,7 +54,7 @@
 		"classnames": "^2.3.2",
 		"flowbite": "^1.6.5",
 		"flowbite-svelte": "^0.37.5",
-		"sbtc-bridge-lib": "^1.0.19",
+		"sbtc-bridge-lib": "^1.0.22",
 		"svelte-local-storage-store": "^0.4.0",
 		"svelte-qrcode": "^1.0.0",
 		"tailwind-merge": "^1.13.1"

@@ -1,6 +1,6 @@
 <script lang="ts">
 import { CONFIG } from '$lib/config';
-import { setCoordinator, setBtcWallet, coordinators, mintTo } from "$lib/sbtc_admin.js";
+import { setCoordinator, setBtcWallet } from "$lib/sbtc_admin.js";
 import MintTokens from './MintTokens.svelte'
 import BurnTokens from './BurnTokens.svelte'
 import { sbtcConfig } from '$stores/stores'

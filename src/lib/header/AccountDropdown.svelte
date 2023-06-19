@@ -11,8 +11,7 @@
 	import { truncate } from '$lib/utils'
 	import { sbtcConfig } from '$stores/stores'
 	import { fmtSatoshiToBitcoin, fmtMicroToStx, bitcoinBalanceFromMempool } from '$lib/utils'
-	import { addresses, logUserOut } from '$lib/stacks_connect'
-	import type { SbtcConfig } from '$types/sbtc_config';
+	import { addresses } from '$lib/stacks_connect'
 	const dispatch = createEventDispatcher();
 
 	let copied = false;
@@ -106,7 +105,7 @@
 						<span class="font-bold">STX</span>
 					</div>
 					<div class="ml-auto flex items-center">
-						{fmtMicroToStx($sbtcConfig?.addressObject?.stacksTokenInfo?.stx.balance || 0.000000)}
+						{fmtMicroToStx($sbtcConfig?.addressObject?.stacksTokenInfo?.stx?.balance || 0.000000)}
 					</div>
 				</div>
 

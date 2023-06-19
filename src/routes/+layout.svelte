@@ -4,8 +4,7 @@
 	import Header from "$lib/header/Header.svelte";
 	import Footer from "$lib/header/Footer.svelte";
 	import { fetchSbtcData } from "$lib/bridge_api";
-	import { fetchSbtcBalance, userSession, isLegal, makeFlash } from "$lib/stacks_connect";
-	import { fetchUtxoSet, fetchCurrentFeeRates, fetchKeys } from "$lib/bridge_api";
+	import { fetchSbtcBalance, userSession, isLegal } from "$lib/stacks_connect";
 	import { setConfig } from '$lib/config';
 	import { afterNavigate, beforeNavigate, goto } from "$app/navigation";
 	import { page } from "$app/stores";
@@ -48,7 +47,7 @@
 	afterNavigate((nav) => {
 		componentKey++;
 	})
-	export let data:SbtcContractDataI;
+	export let data:{ sbtcContractData: SbtcContractDataI, keys: KeySet, sbtcWalletAddressInfo: any, btcFeeRates: any } ;
 	const unsubscribe = sbtcConfig.subscribe((conf) => {});
 	onDestroy(unsubscribe);
 	//setUpMicroStacks();
@@ -63,21 +62,19 @@
 		}
 		try {
 			data = await fetchSbtcData();
-			if (!data) data = defaultSbtcConfig.sbtcContractData;
-			const keys:KeySet = await fetchKeys();
-			conf.keys = keys;
+			if (!data) data = {} as any;
 			conf.loggedIn = false;
 			if (userSession.isUserSignedIn()) {
 				conf.loggedIn = true;
 				await fetchSbtcBalance();
 			}
-			$sbtcConfig.sbtcContractData = data
-			//if ($sbtcConfig.sbtcContractData.sbtcWalletAddress && !$sbtcConfig.sbtcWalletAddressInfo) $sbtcConfig.sbtcWalletAddressInfo = await fetchUtxoSet(data.sbtcWalletAddress);
 		} catch (err) {
-			data = defaultSbtcConfig.sbtcContractData;
+			data = {} as any;
 		}
-		if (!$sbtcConfig.btcFeeRates) $sbtcConfig.btcFeeRates = await fetchCurrentFeeRates();
-		conf.sbtcContractData = data;
+		conf.sbtcContractData = data.sbtcContractData;
+		conf.keys = data.keys;
+		conf.sbtcWalletAddressInfo = data.sbtcWalletAddressInfo;
+		conf.btcFeeRates = data.btcFeeRates;
 		sbtcConfig.update(() => conf);
 	}
 

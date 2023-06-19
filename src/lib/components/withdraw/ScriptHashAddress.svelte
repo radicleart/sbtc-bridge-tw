@@ -46,7 +46,7 @@
   const paymentUri = () => {
     let uri = 'bitcoin:' + peginRequest.commitTxScript!.address
     uri += '?amount=' + fmtSatoshiToBitcoin(amount)
-    uri += '&label=' + encodeURI('Wrap BTC to mint sBTC on Stacks')
+    uri += '&label=' + encodeURI('Deposit BTC to mint sBTC on Stacks')
     return uri
   }
   onMount(async () => {

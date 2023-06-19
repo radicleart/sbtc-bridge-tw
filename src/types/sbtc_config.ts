@@ -18,6 +18,7 @@ export type SbtcConfig = {
   userSettings:SbtcUserSettingI;
   sbtcContractData: SbtcContractDataI;
   keys: KeySet;
+  sbtcAddressInfo: any;
   innerWidth:number;
 };
 

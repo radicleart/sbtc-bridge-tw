@@ -41,7 +41,7 @@ onMount(async () => {
         <span>{inputData.label}</span>
         <span class="pointer"><IntroFill/></span>
       </div>
-      <input id={inputData.field} type='number' class="text-black tracking-wide font-extralight rounded-md p-3 h-12 w-full" bind:value={value} on:input={() => updater()}>
+      <input id={inputData.field} type='number' class="text-black tracking-wide font-extralight rounded-md p-3 h-12 w-full" bind:value={inputData.value}>
     </div>
     <div class="text-xs mt-1 text-left flex items-center justify-between">
       {#if reason}

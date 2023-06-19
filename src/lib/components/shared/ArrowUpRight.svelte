@@ -8,7 +8,7 @@ let anchorClass = clazz + ' rounded-md bg-black flex items-center justify-center
 </script>
   
 <div class="ml-auto flex items-center">
-    <a title="show in explorer" href={target} class={clazz} target="_blank" >
+    <a title="show in explorer" href={target} class={anchorClass} target="_blank" >
       <Icon src="{ArrowUpRight}" mini {clazz} aria-hidden="true" />
     </a>
 </div>

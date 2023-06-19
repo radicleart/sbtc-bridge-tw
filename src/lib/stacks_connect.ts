@@ -112,8 +112,8 @@ export function addresses():AddressObject {
 }
 
 export const appDetails = {
-	name: 'sBTC Client',
-	icon: '/img/logo-white.jpeg',
+	name: 'sBTC Bridge',
+	icon: window.location.origin + '/img/icon_sbtc.png',
 }
 
 export function makeFlash(el1:HTMLElement|null) {

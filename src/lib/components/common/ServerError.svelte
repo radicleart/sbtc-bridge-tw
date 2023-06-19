@@ -10,8 +10,8 @@ const launchApp = () => {
 </script>
 <div class="mx-auto h-[calc(100vh-280px)] flex flex-col justify-center">
     <div class="mx-auto max-w-2xl">
-        <div class="flex flex-col p-10 gap-10 items-start bg-gray-1000 border-[0.5px] border-gray-700 rounded-3xl">
-            <div class="flex flex-col gap-10">
+        <div class="flex flex-col p-10 gap-0 items-start bg-gray-1000 border-[0.5px] border-gray-700 rounded-3xl">
+            <div class="flex flex-col gap-0">
                 {#if !$sbtcConfig?.sbtcContractData?.sbtcWalletAddress}
                 <h1 class="font-medium text-2xl">Error: sBTC Wallet</h1>
                 {:else}

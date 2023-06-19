@@ -1,7 +1,7 @@
 import * as btc from '@scure/btc-signer';
 import { hex } from '@scure/base';
 import type { PeginRequestI } from 'sbtc-bridge-lib' 
-import { fetchUtxoSet, fetchCurrentFeeRates } from "../bridge_api";
+import { fetchUtxoSet } from "../bridge_api";
 import { decodeStacksAddress, addresses } from '$lib/stacks_connect'
 import { CONFIG } from '$lib/config';
 import { toStorable, buildWithdrawalPayload, approxTxFees, getDataToSign } from 'sbtc-bridge-lib' 
@@ -77,7 +77,7 @@ export default class PegOutTransaction implements PegOutTransactionI {
 	 * @param sbtcWalletAddress 
 	 * @returns instance of PegOutTransaction
 	 */
-	public static create = async (network:string, commitKeys:CommitKeysI):Promise<PegOutTransactionI> => {
+	public static create = async (network:string, commitKeys:CommitKeysI, btcFeeRates:any):Promise<PegOutTransactionI> => {
 		const me = new PegOutTransaction();
 		me.net = (network === 'testnet') ? btc.TEST_NETWORK : btc.NETWORK;
 		if (commitKeys.fromBtcAddress && commitKeys.fromBtcAddress.length > 0) {
@@ -92,7 +92,6 @@ export default class PegOutTransaction implements PegOutTransactionI {
 		}
 		// utxos have to come from a hosted indexer or external service
 		me.addressInfo = await fetchUtxoSet(commitKeys.fromBtcAddress);
-		const btcFeeRates = await fetchCurrentFeeRates();
 		me.feeInfo = btcFeeRates.feeInfo;
 		me.ready = true;
 		return me;
@@ -290,7 +289,7 @@ export default class PegOutTransaction implements PegOutTransactionI {
 
 	getOpReturnPeginRequest = ():PeginRequestI => {
 		if (!this.pegInData.stacksAddress) this.pegInData.stacksAddress = addresses().stxAddress
-		const data = this.buildData(this.pegInData.stacksAddress, true);
+		const data = this.buildData(this.signature, false);
 		console.log('reclaimAddr.pubkey: ' + this.commitKeys.reclaimPub)
 		console.log('revealAddr.pubkey: ' + this.commitKeys.revealPub)
 		

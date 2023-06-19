@@ -13,11 +13,9 @@ import type { PeginRequestI, PegInData, CommitKeysI } from 'sbtc-bridge-lib'
 import { signMessage, verifyStacksPricipal, verifySBTCAmount, addresses } from '$lib/stacks_connect';
 import { getTestAddresses } from 'sbtc-bridge-lib' 
 import type { SbtcConfig } from '$types/sbtc_config';
-import ScriptHashAddress from './ScriptHashAddress.svelte';
+import ScriptHashAddress from '$lib/components/deposit/ScriptHashAddress.svelte';
 import { makeFlash } from "$lib/stacks_connect";
 import { fetchPeginById, doPeginScan } from "$lib/bridge_api";
-import StatusCheck from "$lib/components/deposit/StatusCheck.svelte";
-import ServerError from "../common/ServerError.svelte";
 import Banner from '$lib/components/shared/Banner.svelte';
 import SignTransactionWeb from "$lib/components/deposit/op_return/SignTransactionWeb.svelte";
 
@@ -111,14 +109,28 @@ const doClicked = async (event:any) => {
   const button = event.detail;
   if (button.target === 'showInvoice') {
     try {
-      verifySBTCAmount(piTx.pegInData.amount, $sbtcConfig.addressObject!.sBTCBalance, piTx.fee);
+      verifySBTCAmount(input2Data.value, $sbtcConfig.addressObject!.sBTCBalance, piTx.fee);
+      piTx.pegInData.amount = input2Data.value;
       const script = piTx.getDataToSign();
       await signMessage(async function(sigData:any, message:Uint8Array) {
         piTx.signature = sigData.signature;
+        try {
+          if ($sbtcConfig.userSettings.useOpDrop) {
+            peginRequest = piTx.getOpDropPeginRequest();
+          } else {
+            peginRequest = piTx.getOpReturnPeginRequest();
+          }
+        } catch (err) {
+          piTx.commitKeys = commitAddresses(); // make sure the addresses are all hex encoded and serialisation safe.
+          peginRequest = piTx.getOpDropPeginRequest();
+        }
+        peginRequest.originator = $sbtcConfig.addressObject!.stxAddress; // retain the sender in case the address in UI changes.
+        
+
         const conf:SbtcConfig = $sbtcConfig;
         conf.sigData = sigData.signature;
         sbtcConfig.update(() => conf);
-        pegout = piTx.getOpDropPeginRequest();
+        //pegout = piTx.getOpDropPeginRequest();
         timeLineStatus = 2;
         if (!$sbtcConfig.userSettings?.useOpDrop) {
           timeLineStatus = 4;
@@ -144,7 +156,7 @@ const doClicked = async (event:any) => {
     //await doPeginScan();
     if ($sbtcConfig.pegOutMongoId) pegout = await fetchPeginById($sbtcConfig.pegOutMongoId);
     timeLineStatus = 3;
-    dispatch('time_line_status_change', { timeLineStatus });
+    goto('/transactions/' + peginRequest._id);
   } else if (button.target === 'transaction-history') {
 		goto('/transactions')
   }
@@ -187,7 +199,7 @@ const initComponent = async () => {
     if ($sbtcConfig.pegOutTransaction) {
       piTx = PegOutTransaction.hydrate($sbtcConfig.pegOutTransaction);
     } else {
-      piTx = await PegOutTransaction.create(network, commitAddresses());
+      piTx = await PegOutTransaction.create(network, commitAddresses(), $sbtcConfig.btcFeeRates);
     }
   }
   if (!piTx.pegInData) piTx.pegInData = {} as PegInData;
@@ -198,16 +210,9 @@ const initComponent = async () => {
   if (piTx.pegInData.amount <= 0 || piTx.pegInData.amount > (addressObject.sBTCBalance - piTx.fee)) {
     piTx.pegInData.amount = input2Data.value = input2Data.resetValue = addressObject.sBTCBalance - piTx.fee;
   }
-  if (input2Data.value <= 0) balanceMsg = true
+  if (addressObject.sBTCBalance <= 0) balanceMsg = true
   input2Data.hint = 'sBTC Balance: ' + addressObject.sBTCBalance;
-  try {
-    peginRequest = piTx.getOpDropPeginRequest();
-  } catch (err) {
-    piTx.commitKeys = commitAddresses(); // make sure the addresses are all hex encoded and serialisation safe.
-    peginRequest = piTx.getOpDropPeginRequest();
-  }
-  peginRequest.originator = addressObject.stxAddress; // retain the sender in case the address in UI changes.
-  
+  input2Data.value = piTx.pegInData.amount;
   dispatch('time_line_status_change', { timeLineStatus });
 
   const conf:SbtcConfig = $sbtcConfig;
@@ -248,15 +253,13 @@ onMount(async () => {
       <InputTextField readonly={true} inputData={input0Data} on:updated={fieldUpdated}/>
       <InputTextField readonly={true} inputData={input1Data} on:updated={fieldUpdated}/>
       <InputNumberField inputData={input2Data} on:updated={fieldUpdated}/>
+      {#if amountErrored}<div class="text-warning-600">{amountErrored}</div>{/if}
       <Button darkScheme={false} label={'Sign Message'} target={'showInvoice'} on:clicked={doClicked}/>
     {/key}
     {:else if timeLineStatus === 2}
-    <ScriptHashAddress peginRequest={pegout} on:clicked={doClicked}/>
+    <ScriptHashAddress {peginRequest} on:clicked={doClicked}/>
     {:else if timeLineStatus === 4}
-    <SignTransactionWeb {piTx} on:update_transaction={updateTransaction}/>
-
-    {:else if timeLineStatus === 3}
-    <StatusCheck pegin={pegout} on:clicked={doClicked}/>
+    <SignTransactionWeb {piTx} {peginRequest} on:update_transaction={updateTransaction}/>
     {/if}
   {:else}
     <Banner class="mt-10" bannerType={'danger'} message={'You don\'t have enough sBTC to withdraw.'} />
